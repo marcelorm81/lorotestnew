@@ -28,6 +28,37 @@ const App: React.FC = () => {
     }));
   };
 
+  // --- System UI & Theme Color Management ---
+  useEffect(() => {
+    let themeColor = '#F4F0EA'; // Default Loro Piana Cream for standard pages
+
+    // 1. Pure Black Vibe (Intro, Login, Store Key)
+    if (['welcome', 'login', 'store-key'].includes(state.activeScreen)) {
+        themeColor = '#000000';
+    } 
+    // 2. Dark Charcoal Vibe (Home, Events, Shop/Drops, Video Details)
+    else if (['home', 'events', 'event-detail', 'drops'].includes(state.activeScreen)) {
+        themeColor = '#1A1A1A';
+    }
+    // 3. Account Vibe (Matches the deep red gradient header)
+    else if (state.activeScreen === 'account') {
+        themeColor = '#2D0A0A'; 
+    }
+
+    // Apply to meta tag for iOS/Safari UI
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'theme-color');
+        document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', themeColor);
+
+    // Apply to body background to prevent white overscroll flashes on dark pages
+    document.body.style.backgroundColor = themeColor;
+
+  }, [state.activeScreen]);
+
   const goBack = () => {
     if (state.prevScreen && state.prevScreen !== state.activeScreen) navigate(state.prevScreen);
     else navigate('home');
@@ -92,8 +123,8 @@ const App: React.FC = () => {
         {state.activeScreen === 'product-detail' && <ProductDetailScreen state={state} goBack={goBack} toggleChat={toggleChat} />}
         {state.activeScreen === 'mto' && <MTOScreen state={state} goBack={goBack} navigate={navigate} toggleChat={toggleChat} />}
         {state.activeScreen === 'store-key' && <StoreKeyScreen goBack={goBack} />}
-        {state.activeScreen === 'events' && <EventsScreen state={state} navigate={navigate} />}
-        {state.activeScreen === 'event-detail' && <EventDetailScreen state={state} goBack={goBack} toggleChat={toggleChat} />}
+        {state.activeScreen === 'events' && <EventsScreen state={state} navigate={navigate} goBack={goBack} />}
+        {state.activeScreen === 'event-detail' && <EventDetailScreen state={state} goBack={goBack} toggleChat={toggleChat} navigate={navigate} />}
         {state.activeScreen === 'drops' && <DropsScreen state={state} navigate={navigate} />}
         {state.activeScreen === 'account' && <AccountScreen state={state} navigate={navigate} />}
         {state.activeScreen === 'personal-preferences' && <PersonalPreferencesScreen state={state} goBack={goBack} navigate={navigate} />}

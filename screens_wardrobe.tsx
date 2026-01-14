@@ -218,7 +218,8 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
           {/* Background Ambient Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[400px] bg-gradient-to-b from-[#B08D57]/10 to-transparent pointer-events-none opacity-50" />
 
-          <div className="flex items-center justify-between px-6 py-5 pt-safe sticky top-0 z-40 bg-[#151515]/80 backdrop-blur-xl border-b border-white/5">
+          {/* Header - Made Transparent to blend with hero */}
+          <div className="flex items-center justify-between px-6 py-5 pt-safe sticky top-0 z-40">
              <div className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-90 font-sans text-white">Your Wardrobe</div>
              <div className="flex gap-3">
                  <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white active:bg-white/20 transition-colors">
@@ -238,10 +239,10 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
                 navigate={navigate}
              />
              
-             {/* See All Button */}
+             {/* See All Button - Kept at bottom-12 for better placement */}
              <button 
                 onClick={() => navigate('wardrobe-listing')} 
-                className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[9px] font-bold uppercase tracking-[0.2em] text-white/80 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1 hover:bg-black/60 transition-colors"
+                className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 text-[9px] font-bold uppercase tracking-[0.2em] text-white/80 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1 hover:bg-black/60 transition-colors"
              >
                 See All <ChevronRight className="w-3 h-3" />
              </button>

@@ -10,8 +10,8 @@ import { StackedCards } from './screens_home';
 const LORO_SYMBOL_PNG = "https://raw.githubusercontent.com/marcelorm81/LP_assets/0816650e9d350c07f88b303736084bef893d52bd/LPsymbol.png";
 
 // Helper component for Preference Rows
-const PreferenceRow = ({ label, value, border = true }: { label: string, value: string, border?: boolean }) => (
-  <div className={`flex items-center justify-between p-5 cursor-pointer active:bg-[#F4F0EA] transition-colors ${border ? 'border-b border-[#1A1A1A]/5' : ''}`}>
+const PreferenceRow = ({ label, value, border = true, onClick }: { label: string, value: string, border?: boolean, onClick?: () => void }) => (
+  <div onClick={onClick} className={`flex items-center justify-between p-5 cursor-pointer active:bg-[#F4F0EA] transition-colors ${border ? 'border-b border-[#1A1A1A]/5' : ''}`}>
      <span className="text-sm text-[#1A1A1A] font-sans">{label}</span>
      <div className="flex items-center gap-3">
         <span className="text-xs font-serif text-[#A64B3E]">{value}</span>
@@ -104,17 +104,17 @@ export const MTOScreen: React.FC<{ state: State; goBack: () => void; navigate: a
   );
 };
 
-export const EventsScreen: React.FC<{ state: State; navigate: any }> = ({ state, navigate }) => {
+export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }> = ({ state, navigate, goBack }) => {
     // Identify the main upcoming event (Giraglia) for the Hero section
     const mainEvent = state.events.find(e => e.id === 'giraglia-2025') || state.events[0];
     const otherEvents = state.events.filter(e => e.id !== mainEvent.id);
 
     return (
         <div className="bg-[#1A1A1A] min-h-screen pb-28 text-white font-sans animate-luxury-fade relative">
-            {/* Custom Header: Left Aligned, Absolute Overlay */}
-            <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-5 pt-safe pointer-events-none">
-                <div className="text-[10px] font-bold tracking-[0.3em] uppercase font-sans text-white drop-shadow-md">Events</div>
-            </div>
+            {/* Header matches EventDetailScreen: Button top right, no text title */}
+            <button onClick={goBack} className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform z-50">
+                <X className="w-5 h-5" strokeWidth={1} />
+            </button>
             
             <div className="pb-8 space-y-8">
                 {/* Hero Video Card - Full Bleed Top (no rounded top corners, top-0) */}
@@ -171,90 +171,159 @@ export const EventsScreen: React.FC<{ state: State; navigate: any }> = ({ state,
     );
 };
 
-export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat: any }> = ({ state, goBack, toggleChat }) => {
+export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat: any; navigate: any }> = ({ state, goBack, toggleChat, navigate }) => {
     const event = state.events.find(e => e.id === state.selectedEventId);
+    const pastEvents = state.events.filter(e => e.type === 'past' && e.id !== state.selectedEventId);
+    
     if (!event) return null;
 
-    const PAST_EVENT_IMAGES = [
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/even1.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event2.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event3.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event4.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event5.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event6.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event7.avif",
-      "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event8.avif"
-    ];
+    // Check if it's the Giraglia event to apply specific layout, otherwise generic detail or gallery
+    const isGiraglia = event.id === 'giraglia-2025';
+
+    if (!isGiraglia) {
+        // Simple Gallery View for Past Events (like Lake Como, Aspen)
+        return (
+             <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] animate-luxury-fade relative">
+                 <div className="h-[50vh] w-full relative">
+                     <img src={event.image} className="w-full h-full object-cover" />
+                     <div className="absolute inset-0 bg-black/20" />
+                     <button onClick={goBack} className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform"><X className="w-5 h-5" /></button>
+                 </div>
+                 <div className="px-6 py-8 -mt-10 relative bg-[#F4F0EA] rounded-t-[32px] space-y-4">
+                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">{event.date}</span>
+                     <h1 className="text-3xl font-serif italic">{event.title}</h1>
+                     <p className="text-sm font-sans text-[#1A1A1A]/70 leading-relaxed">{event.description}</p>
+                     
+                     <div className="pt-6">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-4">Gallery</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            {[1, 2, 3, 4].map(i => (
+                                <div key={i} className="aspect-square bg-[#E8E2D9] rounded-lg animate-pulse opacity-50" />
+                            ))}
+                        </div>
+                     </div>
+                 </div>
+             </div>
+        )
+    }
 
     return (
-        <div className="bg-[#1A1A1A] min-h-screen pb-28 text-white">
-             <div className="relative h-[50vh] w-full">
-                <img src={event.image} className="w-full h-full object-cover opacity-80" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-[#1A1A1A]" />
-                <button onClick={goBack} className="absolute top-6 left-6 p-2 bg-black/20 backdrop-blur-md rounded-full border border-white/10"><ChevronLeft className="w-6 h-6 text-white" strokeWidth={1} /></button>
+        <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] font-sans animate-luxury-fade overflow-x-hidden">
+            
+            {/* Hero Video Section - Full Screen Impact */}
+            <div className="relative h-[90vh] w-full">
+                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+                    <source src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/loronew.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
+                
+                {/* Close Button */}
+                <button onClick={goBack} className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform z-50">
+                    <X className="w-5 h-5" strokeWidth={1} />
+                </button>
+
+                {/* Hero Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 pb-12 text-white">
+                    <div className="mb-4 flex items-center gap-3">
+                        <span className="text-[11px] font-sans font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">09-19 June</span>
+                        <span className="text-[11px] font-sans font-medium tracking-wide opacity-80">5 places left</span>
+                    </div>
+                    
+                    {/* Updated Title Typography */}
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-sans font-bold leading-tight mb-0.5">Set Foot aboard My Song,</h1>
+                        <h2 className="text-3xl font-serif italic font-light leading-tight">at the Loro Piana Giraglia</h2>
+                    </div>
+                    
+                    <div className="mt-8">
+                        <button className="w-full py-5 bg-[#F4F0EA] text-[#1A1A1A] uppercase tracking-[0.2em] text-[10px] font-bold rounded-full active:scale-[0.98] transition-all hover:bg-white shadow-xl">
+                            RSVP
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div className="px-6 relative -mt-20 space-y-8 animate-luxury-fade">
-                 <div className="space-y-2">
-                     <span className="px-3 py-1 bg-[#B08D57] text-black text-[9px] font-bold uppercase tracking-widest rounded-sm">{event.date}</span>
-                     <h1 className="text-3xl font-serif italic">{event.title}</h1>
-                 </div>
-                 
-                 <p className="text-sm font-light leading-relaxed text-white/80 font-serif">{event.description}</p>
-                 
-                 {event.privileges.length > 0 && (
-                     <div className="space-y-4 pt-4 border-t border-white/10">
-                         <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/40">Your Privileges</h3>
-                         <ul className="space-y-3">
-                             {event.privileges.map((priv, i) => (
-                                 <li key={i} className="flex gap-3 items-start text-xs font-light text-white/80">
-                                     <Sparkles className="w-4 h-4 text-[#B08D57] shrink-0" strokeWidth={1} />
-                                     {priv}
-                                 </li>
-                             ))}
-                         </ul>
+
+            {/* Editorial Content */}
+            <div className="px-6 py-12 space-y-12 bg-[#F4F0EA]">
+                <div className="space-y-4">
+                    <h2 className="text-2xl font-sans font-bold leading-tight text-[#1A1A1A]">During three days, witness the Grand Finale of an unforgettable sea journey</h2>
+                    <p className="text-sm font-serif text-[#1A1A1A]/70 leading-relaxed">
+                        As a valued guest, you'll have exclusive access to the race, the opportunity to explore the enchanting French Riviera, and the chance to celebrate with champions at the concluding ceremony. This unique adventure combines the thrill of competitive sailing with cultural exploration and convivial celebrations.
+                    </p>
+                </div>
+
+                {/* Agenda / Days Carousel */}
+                <div>
+                     <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xl font-serif italic text-[#1A1A1A]">The Regatta</h3>
+                        <div className="text-[9px] uppercase tracking-widest text-[#1A1A1A]/40 font-bold">Agenda</div>
                      </div>
-                 )}
-                 
-                 {/* Past Event Gallery Section */}
-                 {event.type === 'past' && (
-                    <div className="space-y-6 pt-6 border-t border-white/10">
-                       <div className="p-6 bg-[#252525] border border-white/5 rounded-xl space-y-4 relative overflow-hidden">
-                           <div className="absolute top-0 right-0 p-4 opacity-10">
-                                <MessageSquare className="w-12 h-12 text-white" />
-                           </div>
-                           
-                           <div className="flex items-center gap-3 mb-2">
-                               <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10">
-                                   <img src={state.ca.avatar} className="w-full h-full object-cover" />
-                               </div>
-                               <div>
-                                   <div className="text-[10px] font-bold text-[#B08D57] uppercase tracking-widest">Sofia Giordano</div>
-                                   <div className="text-[8px] text-white/40 uppercase tracking-wider">Client Advisor</div>
-                               </div>
-                           </div>
+                     
+                    <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6">
+                        {/* Day 1 */}
+                        <div className="min-w-[280px] h-[380px] relative rounded-lg overflow-hidden shrink-0 group shadow-lg">
+                            <img src="https://raw.githubusercontent.com/marcelorm81/LP_assets/582084ffd3e71fcf69dc689d60061f9e587543df/carousel1.jpg" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
+                            <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full">
+                                <div className="text-white text-[10px] font-sans font-bold uppercase tracking-widest">Day 1</div>
+                            </div>
+                            <div className="absolute bottom-6 left-6 right-6">
+                                <div className="text-white text-xl font-serif italic mb-1">The Thrill of the Race</div>
+                                <p className="text-white/70 text-[10px] font-sans leading-relaxed">Experience the start of the race from the exclusive Loro Piana boat.</p>
+                            </div>
+                        </div>
 
-                           <p className="text-sm font-serif italic text-white/90 leading-relaxed">
-                               "Dear {state.user.name.split(' ')[0]}, it was a true pleasure to see you. The atmosphere was simply magical, especially as the sun set over the lake. I have curated a selection of the finest moments from the evening for you to enjoy."
-                           </p>
-                       </div>
-                       
-                       <div className="grid grid-cols-2 gap-3">
-                           {PAST_EVENT_IMAGES.map((img, i) => (
-                               <div key={i} className="aspect-[3/4] rounded-lg overflow-hidden bg-white/5 relative group">
-                                   <img src={img} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-                                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-                               </div>
-                           ))}
-                       </div>
+                         {/* Day 2 */}
+                        <div className="min-w-[280px] h-[380px] relative rounded-lg overflow-hidden shrink-0 group shadow-lg">
+                            <img src="https://raw.githubusercontent.com/marcelorm81/LP_assets/582084ffd3e71fcf69dc689d60061f9e587543df/carousel2.jpg" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
+                             <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full">
+                                 <div className="text-white text-[10px] font-sans font-bold uppercase tracking-widest">Day 2</div>
+                            </div>
+                            <div className="absolute bottom-6 left-6 right-6">
+                                <div className="text-white text-xl font-serif italic mb-1">Cultural Immersion</div>
+                                <p className="text-white/70 text-[10px] font-sans leading-relaxed">Private tour of the historic port followed by a sunset gala dinner.</p>
+                            </div>
+                        </div>
                     </div>
-                 )}
+                </div>
 
-                 {event.type === 'upcoming' && (
-                    <div className="pt-6">
-                        <button onClick={toggleChat} className="w-full bg-white text-black py-4 rounded-full text-xs font-bold tracking-widest uppercase">Concierge Request</button>
-                    </div>
-                 )}
+                {/* Contact Button */}
+                <div className="pt-4 border-t border-[#1A1A1A]/10">
+                    <button onClick={toggleChat} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                        <MessageSquare className="w-4 h-4" /> Contact Client Advisor
+                    </button>
+                </div>
             </div>
+
+            {/* Past Events Section */}
+            <div className="px-6 pb-8 space-y-8 bg-[#F4F0EA]">
+                <div className="space-y-2 pt-8 border-t border-[#1A1A1A]/10">
+                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Past Events</h2>
+                    <p className="text-sm font-sans text-[#1A1A1A]/60 max-w-[250px] leading-relaxed">
+                        Relive the Loro Piana moments you've attended.
+                    </p>
+                </div>
+
+                <div className="space-y-4">
+                    {pastEvents.map(evt => (
+                        <div key={evt.id} className="bg-white p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-[#1A1A1A]/5 group cursor-pointer" onClick={() => navigate('event-detail', { selectedEventId: evt.id })}>
+                            <div className="flex-1 p-6 flex flex-col justify-center space-y-2 relative">
+                                <div className="text-[9px] text-[#A64B3E] font-bold uppercase tracking-widest">{evt.date}</div>
+                                <h3 className="text-lg font-serif italic text-[#1A1A1A] leading-tight max-w-[120px]">{evt.title}</h3>
+                                <div className="flex items-center gap-1 text-[8px] text-[#1A1A1A]/40 uppercase tracking-wider group-hover:text-[#A64B3E] transition-colors">
+                                    <span>View Gallery</span> <ArrowRight className="w-3 h-3" />
+                                </div>
+                            </div>
+                            <div className="w-[40%] h-full relative">
+                                <img src={evt.image} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
         </div>
     );
 };
@@ -263,102 +332,27 @@ export const PlanVisitScreen: React.FC<{ goBack: any; navigate: any }> = ({ goBa
     const [selectedDate, setSelectedDate] = useState<number | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState(false);
-    
-    // Mock dates
-    const dates = [
-        { d: '26', w: 'Mon' }, { d: '27', w: 'Tue' }, { d: '28', w: 'Wed' }, 
-        { d: '29', w: 'Thu' }, { d: '30', w: 'Fri' }, { d: '01', w: 'Sat' }
-    ];
-    
-    // Mock times
+    const dates = [{ d: '26', w: 'Mon' }, { d: '27', w: 'Tue' }, { d: '28', w: 'Wed' }, { d: '29', w: 'Thu' }, { d: '30', w: 'Fri' }, { d: '01', w: 'Sat' }];
     const times = ['10:00', '11:30', '14:00', '15:30', '17:00'];
 
     if (submitted) {
         return (
             <div className="bg-[#F4F0EA] min-h-screen flex flex-col items-center justify-center p-8 text-center space-y-6 animate-luxury-fade">
-                <div className="w-20 h-20 bg-[#A64B3E] rounded-full flex items-center justify-center text-white shadow-xl mb-4">
-                    <Check className="w-10 h-10" />
-                </div>
-                <div className="space-y-2">
-                    <h2 className="text-3xl font-serif text-[#1A1A1A]">Request Sent</h2>
-                    <p className="text-sm font-sans text-[#1A1A1A]/60 leading-relaxed max-w-[250px] mx-auto">
-                        Sofia will confirm your appointment shortly. You will receive a notification.
-                    </p>
-                </div>
-                <button 
-                    onClick={goBack}
-                    className="mt-8 px-10 py-4 bg-white border border-[#1A1A1A]/10 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-sm active:scale-[0.98] transition-all text-[#1A1A1A]"
-                >
-                    Return
-                </button>
+                <div className="w-20 h-20 bg-[#A64B3E] rounded-full flex items-center justify-center text-white shadow-xl mb-4"><Check className="w-10 h-10" /></div>
+                <div className="space-y-2"><h2 className="text-3xl font-serif text-[#1A1A1A]">Request Sent</h2><p className="text-sm font-sans text-[#1A1A1A]/60 leading-relaxed max-w-[250px] mx-auto">Sofia will confirm your appointment shortly. You will receive a notification.</p></div>
+                <button onClick={goBack} className="mt-8 px-10 py-4 bg-white border border-[#1A1A1A]/10 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-sm active:scale-[0.98] transition-all text-[#1A1A1A]">Return</button>
             </div>
         );
     }
-
     return (
         <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade">
             <Header title="Plan a Visit" showBack onBack={goBack} showProfile={false} />
-            
             <div className="flex-1 p-6 space-y-8 overflow-y-auto">
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Select a Date</h2>
-                    <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-                        {dates.map((date, i) => (
-                            <button 
-                                key={i} 
-                                onClick={() => setSelectedDate(i)}
-                                className={`min-w-[64px] h-[80px] rounded-xl flex flex-col items-center justify-center border transition-all ${selectedDate === i ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}
-                            >
-                                <span className="text-xs font-serif italic opacity-80">{date.w}</span>
-                                <span className="text-xl font-bold font-sans">{date.d}</span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Select Time</h2>
-                    <div className="grid grid-cols-3 gap-3">
-                        {times.map((time, i) => (
-                             <button 
-                                key={i} 
-                                onClick={() => setSelectedTime(time)}
-                                className={`py-3 rounded-lg text-sm font-sans font-medium border transition-all ${selectedTime === time ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}
-                             >
-                                 {time}
-                             </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Reason for visit</h2>
-                    <div className="bg-white p-4 rounded-xl shadow-sm space-y-3">
-                         <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F9F8F6]">
-                             <div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"><div className="w-2 h-2 rounded-full bg-[#1A1A1A]" /></div>
-                             <span className="text-sm text-[#1A1A1A]">Styling Appointment</span>
-                         </div>
-                         <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#F9F8F6] transition-colors cursor-pointer opacity-60">
-                             <div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"></div>
-                             <span className="text-sm text-[#1A1A1A]">MTO Consultation</span>
-                         </div>
-                         <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#F9F8F6] transition-colors cursor-pointer opacity-60">
-                             <div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"></div>
-                             <span className="text-sm text-[#1A1A1A]">Collection Pick-up</span>
-                         </div>
-                    </div>
-                </div>
+                <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Select a Date</h2><div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">{dates.map((date, i) => (<button key={i} onClick={() => setSelectedDate(i)} className={`min-w-[64px] h-[80px] rounded-xl flex flex-col items-center justify-center border transition-all ${selectedDate === i ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}><span className="text-xs font-serif italic opacity-80">{date.w}</span><span className="text-xl font-bold font-sans">{date.d}</span></button>))}</div></div>
+                <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Select Time</h2><div className="grid grid-cols-3 gap-3">{times.map((time, i) => (<button key={i} onClick={() => setSelectedTime(time)} className={`py-3 rounded-lg text-sm font-sans font-medium border transition-all ${selectedTime === time ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}>{time}</button>))}</div></div>
+                <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Reason for visit</h2><div className="bg-white p-4 rounded-xl shadow-sm space-y-3"><div className="flex items-center gap-3 p-3 rounded-lg bg-[#F9F8F6]"><div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"><div className="w-2 h-2 rounded-full bg-[#1A1A1A]" /></div><span className="text-sm text-[#1A1A1A]">Styling Appointment</span></div><div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#F9F8F6] transition-colors cursor-pointer opacity-60"><div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"></div><span className="text-sm text-[#1A1A1A]">MTO Consultation</span></div><div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#F9F8F6] transition-colors cursor-pointer opacity-60"><div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"></div><span className="text-sm text-[#1A1A1A]">Collection Pick-up</span></div></div></div>
             </div>
-
-            <div className="p-6 bg-[#F4F0EA] border-t border-black/5">
-                <button 
-                    disabled={selectedDate === null || selectedTime === null}
-                    onClick={() => setSubmitted(true)}
-                    className="w-full bg-[#A64B3E] text-white py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Request Confirmation
-                </button>
-            </div>
+            <div className="p-6 bg-[#F4F0EA] border-t border-black/5"><button disabled={selectedDate === null || selectedTime === null} onClick={() => setSubmitted(true)} className="w-full bg-[#A64B3E] text-white py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed">Request Confirmation</button></div>
         </div>
     );
 };
@@ -366,55 +360,12 @@ export const PlanVisitScreen: React.FC<{ goBack: any; navigate: any }> = ({ goBa
 export const PersonalPreferencesScreen: React.FC<{ state: State; goBack: any; navigate: any }> = ({ state, goBack, navigate }) => {
   return (
     <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade relative">
-       {/* Header */}
-       <div className="flex items-center justify-between px-6 py-4 pt-safe relative z-10">
-          <button onClick={() => navigate('account')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform">
-             <ChevronLeft className="w-5 h-5 text-[#1A1A1A]" strokeWidth={1.5} />
-          </button>
-          <div className="text-lg font-bold text-[#1A1A1A] font-sans">Personal preferences</div>
-          <div className="w-10" />
-       </div>
-
+       <div className="flex items-center justify-between px-6 py-4 pt-safe relative z-10"><button onClick={() => navigate('account')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform"><ChevronLeft className="w-5 h-5 text-[#1A1A1A]" strokeWidth={1.5} /></button><div className="text-lg font-bold text-[#1A1A1A] font-sans">Personal preferences</div><div className="w-10" /></div>
        <div className="flex-1 overflow-y-auto p-6 space-y-8 pb-32">
-          {/* Size Section */}
-          <div className="space-y-3">
-             <h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Size</h3>
-             <div className="bg-[#F9F8F6] rounded-xl overflow-hidden">
-                {/* My Measurements */}
-                <div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 border-b border-[#1A1A1A]/5 cursor-pointer active:bg-[#E8E2D9] transition-colors">
-                   <span className="text-sm text-[#1A1A1A]">My Measurements</span>
-                   <ChevronRight className="w-4 h-4 text-[#A64B3E]" />
-                </div>
-                {/* My Size */}
-                <div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 cursor-pointer active:bg-[#E8E2D9] transition-colors">
-                   <span className="text-sm text-[#1A1A1A]">My size</span>
-                   <ChevronRight className="w-4 h-4 text-[#A64B3E]" />
-                </div>
-             </div>
-          </div>
-
-          {/* Preferences Section */}
-          <div className="space-y-3">
-             <h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Preferences</h3>
-             <div className="bg-[#F9F8F6] rounded-xl overflow-hidden">
-                <PreferenceRow label="Color preference" value="Blue, Red, Grey" />
-                <PreferenceRow label="Destination" value="Regular holiday destination" />
-                <PreferenceRow label="Food & Beverage" value="Coffee & tea, soft bevarages..." />
-                <PreferenceRow label="My hobbies & interest" value="Cars, Fitness, Travels..." border={false} />
-             </div>
-          </div>
+          <div className="space-y-3"><h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Size</h3><div className="bg-[#F9F8F6] rounded-xl overflow-hidden"><div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 border-b border-[#1A1A1A]/5 cursor-pointer active:bg-[#E8E2D9] transition-colors"><span className="text-sm text-[#1A1A1A]">My Measurements</span><ChevronRight className="w-4 h-4 text-[#A64B3E]" /></div><div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 cursor-pointer active:bg-[#E8E2D9] transition-colors"><span className="text-sm text-[#1A1A1A]">My size</span><ChevronRight className="w-4 h-4 text-[#A64B3E]" /></div></div></div>
+          <div className="space-y-3"><h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Preferences</h3><div className="bg-[#F9F8F6] rounded-xl overflow-hidden"><PreferenceRow label="Color preference" value="Blue, Red, Grey" /><PreferenceRow label="Destination" value="Regular holiday destination" /><PreferenceRow label="Food & Beverage" value="Coffee & tea, soft bevarages..." /><PreferenceRow label="My hobbies & interest" value="Cars, Fitness, Travels..." border={false} /></div></div>
        </div>
-
-       {/* Footer */}
-       <div className="p-6 pb-10 space-y-6 bg-[#F4F0EA]">
-          <p className="text-[10px] text-[#1A1A1A]/50 text-center leading-relaxed font-serif">
-             This app does not store any private data.<br/>
-             Read the the <span className="underline cursor-pointer">Terms & Conditions.</span>
-          </p>
-          <button onClick={() => navigate('account')} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform">
-             Save
-          </button>
-       </div>
+       <div className="p-6 pb-10 space-y-6 bg-[#F4F0EA]"><p className="text-[10px] text-[#1A1A1A]/50 text-center leading-relaxed font-serif">This app does not store any private data.<br/>Read the the <span className="underline cursor-pointer">Terms & Conditions.</span></p><button onClick={() => navigate('account')} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform">Save</button></div>
     </div>
   );
 };
@@ -422,22 +373,12 @@ export const PersonalPreferencesScreen: React.FC<{ state: State; goBack: any; na
 export const MySizeScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
   return (
     <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade">
-      {/* Explicitly navigate to 'personal-preferences' on back to maintain flow hierarchy */}
       <Header title="My Sizes" showBack onBack={() => goBack()} showProfile={false} />
       <div className="p-6 space-y-4">
          <div className="bg-white rounded-xl p-6 shadow-sm space-y-6">
-             <div className="grid grid-cols-2 gap-4 border-b border-black/5 pb-4">
-                 <div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Jacket</div><div className="text-xl font-serif">IT 50</div></div>
-                 <div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Trousers</div><div className="text-xl font-serif">IT 48</div></div>
-             </div>
-             <div className="grid grid-cols-2 gap-4 border-b border-black/5 pb-4">
-                 <div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Shoes</div><div className="text-xl font-serif">EU 43</div></div>
-                 <div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Shirt</div><div className="text-xl font-serif">40</div></div>
-             </div>
-             <div className="grid grid-cols-2 gap-4">
-                 <div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Hat</div><div className="text-xl font-serif">M</div></div>
-                 <div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Gloves</div><div className="text-xl font-serif">9</div></div>
-             </div>
+             <div className="grid grid-cols-2 gap-4 border-b border-black/5 pb-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Jacket</div><div className="text-xl font-serif">IT 50</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Trousers</div><div className="text-xl font-serif">IT 48</div></div></div>
+             <div className="grid grid-cols-2 gap-4 border-b border-black/5 pb-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Shoes</div><div className="text-xl font-serif">EU 43</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Shirt</div><div className="text-xl font-serif">40</div></div></div>
+             <div className="grid grid-cols-2 gap-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Hat</div><div className="text-xl font-serif">M</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Gloves</div><div className="text-xl font-serif">9</div></div></div>
          </div>
          <p className="text-[10px] text-center text-[#1A1A1A]/50">Based on your last scan on Oct 24, 2024</p>
       </div>
