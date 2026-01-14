@@ -276,8 +276,8 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
               {/* Service Card */}
               <div className="bg-white p-6 rounded-2xl shadow-sm flex items-center justify-between group cursor-pointer active:scale-[0.99] transition-transform border border-[#1A1A1A]/5 hover:shadow-md">
                  <div className="flex-1 pr-4">
-                     <h3 className="text-sm font-bold text-[#1A1A1A] font-sans mb-1">Wardrobe Service</h3>
-                     <p className="text-[11px] font-serif text-[#1A1A1A]/60 leading-tight">Find out how we care for your garments</p>
+                     <h3 className="text-sm font-bold text-[#1A1A1A] font-sans mb-1">Order history</h3>
+                     <p className="text-[11px] font-serif text-[#1A1A1A]/60 leading-tight">View all the garments you've purchased</p>
                  </div>
                  <div className="w-10 h-10 rounded-full bg-[#A64B3E] flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
                      <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
@@ -360,19 +360,25 @@ export const WardrobeListingScreen: React.FC<{ state: State; navigate: any; goBa
   )
 }
 
-// ... Rest of the file (WardrobeItemCard, WardrobeDetailScreen, etc.) remains unchanged ...
-
-const WardrobeItemCard = ({ item, index, wardrobeName, onPress }: any) => {
+const WardrobeItemCard = ({ item, index, wardrobeName, onPress, isSuggestion, onSuggestionAction }: any) => {
     const size = "M"; 
     const color = ["Navy Blue", "Landscape Green", "Oatmeal", "Vicuña"][index % 4];
-    const date = "Jan 12, 2024";
-    const status = index < 2 ? "alteration in progress" : null;
+    
+    // Status Logic
+    let status = index < 2 ? "alteration in progress" : null;
+    let statusBg = "bg-[#9D5E52]";
+    let statusText = "text-white";
+
+    if (isSuggestion) {
+        status = "Suggested by Sophia";
+        statusBg = "bg-black";
+        statusText = "text-white";
+    }
 
     // Featured Card (Index 0) - Edge to Edge Image
-    if (index === 0) {
+    if (index === 0 && !isSuggestion) {
         return (
             <div onClick={onPress} className="bg-white rounded-[20px] shadow-sm overflow-hidden cursor-pointer active:scale-[0.99] transition-transform duration-500">
-                {/* Edge to Edge Image with #F4F0EA bg */}
                 <div className="w-full aspect-[4/5] bg-[#F4F0EA] relative flex items-center justify-center">
                     <img src={item.image} className="w-[85%] h-[85%] object-contain" />
                 </div>
@@ -397,7 +403,7 @@ const WardrobeItemCard = ({ item, index, wardrobeName, onPress }: any) => {
                     
                      {status && (
                         <div className="mt-4">
-                            <span className="inline-block px-4 py-2 bg-[#9D5E52] text-white text-[9px] font-bold uppercase tracking-wider rounded-full">
+                            <span className={`inline-block px-4 py-2 ${statusBg} ${statusText} text-[9px] font-bold uppercase tracking-wider rounded-full`}>
                                 {status}
                             </span>
                         </div>
@@ -409,8 +415,8 @@ const WardrobeItemCard = ({ item, index, wardrobeName, onPress }: any) => {
 
     // Horizontal List Card - Edge to Edge Image on Left
     return (
-        <div onClick={onPress} className="bg-white rounded-[20px] shadow-sm flex overflow-hidden cursor-pointer active:scale-[0.99] transition-transform min-h-[140px]">
-             <div className="w-[35%] bg-[#F4F0EA] relative flex items-center justify-center">
+        <div onClick={onPress} className="bg-white rounded-[20px] shadow-sm flex overflow-hidden cursor-pointer active:scale-[0.99] transition-transform min-h-[140px] relative">
+             <div className="w-[35%] bg-[#F4F0EA] relative flex items-center justify-center shrink-0">
                  <img src={item.image} className="w-[90%] h-[90%] object-contain" />
              </div>
              
@@ -419,7 +425,10 @@ const WardrobeItemCard = ({ item, index, wardrobeName, onPress }: any) => {
                         <h3 className="text-sm font-bold font-sans text-[#1A1A1A] leading-tight pr-2">{item.name}</h3>
                         <button className="text-[#1A1A1A]/30"><MoreHorizontal className="w-4 h-4" /></button>
                   </div>
-                  <p className="text-[10px] font-serif italic text-[#1A1A1A]/50 mb-3">In {wardrobeName}</p>
+                  
+                  <p className="text-[10px] font-serif italic text-[#1A1A1A]/50 mb-3">
+                      {isSuggestion ? "Recommendation" : `In ${wardrobeName}`}
+                  </p>
                   
                   <div className="space-y-1">
                        <div className="flex justify-between items-end text-[10px]">
@@ -434,9 +443,37 @@ const WardrobeItemCard = ({ item, index, wardrobeName, onPress }: any) => {
                   
                   {status && (
                       <div className="mt-3">
-                        <span className="inline-block px-2 py-1 bg-[#9D5E52] text-white text-[7px] font-bold uppercase tracking-wider rounded-full">
+                        <span className={`inline-block px-2 py-1 ${statusBg} ${statusText} text-[7px] font-bold uppercase tracking-wider rounded-full`}>
                             {status}
                         </span>
+                      </div>
+                  )}
+
+                  {isSuggestion && (
+                      <div className="mt-3 pt-3 border-t border-[#1A1A1A]/5 space-y-3">
+                          <p className="text-[10px] text-[#1A1A1A]/60 italic leading-relaxed">
+                              "I thought this would pair perfectly with your new jacket."
+                          </p>
+                          <div className="flex items-center gap-3">
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); onSuggestionAction('accept'); }}
+                                className="w-8 h-8 rounded-full border border-[#1A1A1A]/10 flex items-center justify-center hover:bg-[#1A1A1A] hover:text-white transition-colors active:scale-90"
+                              >
+                                  <Check className="w-3.5 h-3.5" />
+                              </button>
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); onSuggestionAction('dismiss'); }}
+                                className="w-8 h-8 rounded-full border border-[#1A1A1A]/10 flex items-center justify-center hover:bg-[#1A1A1A] hover:text-white transition-colors active:scale-90"
+                              >
+                                  <X className="w-3.5 h-3.5" />
+                              </button>
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); onSuggestionAction('chat'); }}
+                                className="w-8 h-8 rounded-full border border-[#1A1A1A]/10 flex items-center justify-center hover:bg-[#1A1A1A] hover:text-white transition-colors active:scale-90"
+                              >
+                                  <MessageSquare className="w-3.5 h-3.5" />
+                              </button>
+                          </div>
                       </div>
                   )}
              </div>
@@ -446,6 +483,38 @@ const WardrobeItemCard = ({ item, index, wardrobeName, onPress }: any) => {
 
 export const WardrobeDetailScreen: React.FC<{ state: State; navigate: any; goBack: any; toggleChat: any }> = ({ state, navigate, goBack, toggleChat }) => {
   const wardrobe = state.wardrobes.find(w => w.id === state.selectedWardrobeId) || state.wardrobes[0];
+  const [suggestionState, setSuggestionState] = useState<'visible' | 'added' | 'dismissed'>('visible');
+
+  // Hardcoded suggestion item
+  const suggestionItem = {
+      id: 'suggestion-1',
+      name: 'Cashmere Overshirt',
+      image: 'https://raw.githubusercontent.com/marcelorm81/LP_assets/414fcc95239171d2ebc787eb37fd7489b20c456f/jacket.avif',
+      category: 'Outerwear',
+      isSuggestion: true
+  };
+
+  const handleSuggestionAction = (action: 'accept' | 'dismiss' | 'chat') => {
+      if (action === 'accept') {
+          setSuggestionState('added');
+      } else if (action === 'dismiss') {
+          setSuggestionState('dismissed');
+      } else if (action === 'chat') {
+          toggleChat();
+      }
+  };
+
+  // Build the display list
+  let displayItems = [...wardrobe.items];
+  
+  if (suggestionState === 'visible') {
+      // Insert suggestion at index 1
+      displayItems.splice(1, 0, suggestionItem);
+  } else if (suggestionState === 'added') {
+      // Insert suggestion as a normal item (remove isSuggestion flag visual)
+      const addedItem = { ...suggestionItem, isSuggestion: false };
+      displayItems.splice(1, 0, addedItem);
+  }
   
   return (
     <div className="bg-[#F4F0EA] min-h-screen relative flex flex-col animate-luxury-fade">
@@ -467,7 +536,7 @@ export const WardrobeDetailScreen: React.FC<{ state: State; navigate: any; goBac
 
         {/* Hero Content */}
         <div className="absolute bottom-10 left-0 right-0 z-20 text-center px-8">
-             <div className="text-sm font-serif italic text-white/90 mb-2 font-light">{wardrobe.items.length} items</div>
+             <div className="text-sm font-serif italic text-white/90 mb-2 font-light">{wardrobe.items.length + (suggestionState === 'added' ? 1 : 0)} items</div>
              <h1 className="text-[32px] leading-[1.1] text-white drop-shadow-md">
                 <span className="font-sans font-bold">{wardrobe.name.split(' ')[0] || 'Casual'} </span>
                 <span className="font-serif italic font-light">{wardrobe.name.split(' ').slice(1).join(' ') || 'Wardrobe'}</span>
@@ -477,13 +546,19 @@ export const WardrobeDetailScreen: React.FC<{ state: State; navigate: any; goBac
 
       {/* Content List - No overlapping, Clean Layout */}
       <div className="flex-1 bg-[#F4F0EA] relative z-10 px-4 pb-32 pt-6 space-y-6">
-        {wardrobe.items.map((item, idx) => (
+        {displayItems.map((item, idx) => (
             <WardrobeItemCard 
                 key={item.id} 
                 item={item} 
                 index={idx} 
                 wardrobeName={wardrobe.name}
-                onPress={() => navigate('product-detail', { selectedProductId: item.id })} 
+                isSuggestion={item.isSuggestion}
+                onSuggestionAction={handleSuggestionAction}
+                onPress={() => {
+                    if (!item.isSuggestion) {
+                        navigate('product-detail', { selectedProductId: item.id });
+                    }
+                }} 
             />
         ))}
 

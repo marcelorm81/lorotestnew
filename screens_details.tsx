@@ -110,66 +110,82 @@ export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }
     const otherEvents = state.events.filter(e => e.id !== mainEvent.id);
 
     return (
-        <div className="bg-[#1A1A1A] min-h-screen pb-28 text-white font-sans animate-luxury-fade relative">
-            {/* Header matches EventDetailScreen: Button top right, no text title */}
-            <button onClick={goBack} className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform z-50">
-                <X className="w-5 h-5" strokeWidth={1} />
-            </button>
+        <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] font-sans animate-luxury-fade overflow-x-hidden relative">
             
-            <div className="pb-8 space-y-8">
-                {/* Hero Video Card - Full Bleed Top (no rounded top corners, top-0) */}
-                <div onClick={() => navigate('event-detail', { selectedEventId: mainEvent.id })} className="w-full aspect-[4/5] relative overflow-hidden shadow-2xl cursor-pointer group">
-                     <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-1000">
-                        <source src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/loronew.mp4" type="video/mp4" />
-                     </video>
-                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 opacity-90" />
-                     
-                     <div className="absolute top-24 left-6 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full">
-                        <span className="text-[8px] uppercase tracking-widest font-bold text-white">Next Destination</span>
-                     </div>
+            {/* Hero Video Section - Full Screen Impact */}
+            <div 
+                onClick={() => navigate('event-detail', { selectedEventId: mainEvent.id })}
+                className="relative h-[90vh] w-full cursor-pointer group"
+            >
+                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+                    <source src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/loronew.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
+                
+                {/* Hero Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 pb-12 text-white">
+                    <div className="mb-4 flex items-center gap-3">
+                        <span className="text-[11px] font-sans font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">09-19 June</span>
+                        <span className="text-[11px] font-sans font-medium tracking-wide opacity-80">5 places left</span>
+                    </div>
+                    
+                    {/* Title with requested specific line breaks */}
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-sans font-bold leading-tight">Set Foot</h1>
+                        <h1 className="text-3xl font-sans font-bold leading-tight">aboard My Song,</h1>
+                        <h2 className="text-3xl font-serif italic font-light leading-tight">at the Loro Piana</h2>
+                        <h2 className="text-3xl font-serif italic font-light leading-tight">Giraglia</h2>
+                    </div>
+                    
+                    <div className="mt-8">
+                         <button className="w-full py-5 bg-[#F4F0EA] text-[#1A1A1A] uppercase tracking-[0.2em] text-[10px] font-bold rounded-full active:scale-[0.98] transition-all hover:bg-white shadow-xl flex items-center justify-center">
+                            {mainEvent.status === 'confirmed' ? 'Access Event' : 'RSVP'}
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                     <div className="absolute bottom-0 left-0 right-0 p-8">
-                         <h2 className="text-4xl font-serif italic font-light leading-none mb-3">{mainEvent.title}</h2>
-                         <p className="text-xs font-sans text-white/80 leading-relaxed mb-8 max-w-[80%]">{mainEvent.description.substring(0, 60)}...</p>
-                         
-                         <div className="flex items-center justify-between border-t border-white/20 pt-5">
-                             <div>
-                                 <div className="text-[8px] uppercase tracking-widest opacity-60 mb-1">When</div>
-                                 <div className="text-sm font-medium">{mainEvent.date}</div>
-                             </div>
-                             <div className="h-9 px-8 bg-[#B08D57] text-[#1A1A1A] rounded-full flex items-center justify-center text-[9px] font-bold uppercase tracking-widest hover:bg-white transition-colors">
-                                 {mainEvent.status === 'confirmed' ? 'Access' : 'RSVP'}
-                             </div>
-                         </div>
-                     </div>
+            {/* Past Events Section */}
+            <div className="px-6 pb-8 space-y-8 bg-[#F4F0EA]">
+                <div className="space-y-2 pt-8 border-t border-[#1A1A1A]/10">
+                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Past Events</h2>
+                    <p className="text-sm font-sans text-[#1A1A1A]/60 max-w-[250px] leading-relaxed">
+                        Relive the Loro Piana moments you've attended.
+                    </p>
                 </div>
 
-                {/* Past Events List - With Padding */}
-                <div className="space-y-4 px-6">
-                    <div className="flex items-center justify-between px-1">
-                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-widest">Past Events</h3>
-                    </div>
-                    <div className="space-y-3">
-                        {otherEvents.map(event => (
-                            <div key={event.id} onClick={() => navigate('event-detail', { selectedEventId: event.id })} className="flex gap-4 bg-[#252525] p-2 rounded-xl border border-white/5 cursor-pointer active:scale-[0.98] transition-transform">
-                                <div className="w-20 h-24 rounded-lg overflow-hidden shrink-0 relative">
-                                    <img src={event.image} className="w-full h-full object-cover opacity-80" />
-                                </div>
-                                <div className="flex flex-col justify-center py-1 pr-2">
-                                    <div className="text-[8px] text-[#B08D57] uppercase tracking-widest mb-1">{event.date}</div>
-                                    <h4 className="text-lg font-serif italic mb-2 leading-tight text-white/90">{event.title}</h4>
-                                    <div className="flex items-center gap-1 text-[8px] text-white/40 uppercase tracking-wider">
-                                        <span>View Gallery</span> <ArrowRight className="w-3 h-3" />
-                                    </div>
+                <div className="space-y-4">
+                    {otherEvents.map(evt => (
+                        <div key={evt.id} className="bg-white p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-[#1A1A1A]/5 group cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate('event-detail', { selectedEventId: evt.id }); }}>
+                            <div className="flex-1 p-6 flex flex-col justify-center space-y-2 relative">
+                                <div className="text-[9px] text-[#A64B3E] font-bold uppercase tracking-widest">{evt.date}</div>
+                                <h3 className="text-lg font-serif italic text-[#1A1A1A] leading-tight max-w-[120px]">{evt.title}</h3>
+                                <div className="flex items-center gap-1 text-[8px] text-[#1A1A1A]/40 uppercase tracking-wider group-hover:text-[#A64B3E] transition-colors">
+                                    <span>View Gallery</span> <ArrowRight className="w-3 h-3" />
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                            <div className="w-[40%] h-full relative">
+                                <img src={evt.image} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     );
 };
+
+const GALLERY_IMAGES = [
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/even1.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event2.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event3.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event4.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event5.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event6.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event7.avif",
+  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event8.avif"
+];
 
 export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat: any; navigate: any }> = ({ state, goBack, toggleChat, navigate }) => {
     const event = state.events.find(e => e.id === state.selectedEventId);
@@ -181,6 +197,43 @@ export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat
     const isGiraglia = event.id === 'giraglia-2025';
 
     if (!isGiraglia) {
+        
+        let caMessage = null;
+        if (event.id === 'lake-como-2024') {
+            caMessage = (
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#1A1A1A]/5 flex gap-5 mb-8">
+                    <div className="shrink-0">
+                        <img src={state.ca.avatar} className="w-12 h-12 rounded-full object-cover border border-[#1A1A1A]/10" />
+                    </div>
+                    <div className="space-y-2">
+                         <p className="text-sm font-serif italic text-[#1A1A1A] leading-relaxed">
+                            <span className="font-bold font-sans not-italic text-[10px] uppercase tracking-widest text-[#B08D57] block mb-2">Message from Sofia</span>
+                            "Andrea,<br/><br/>
+                            A few memories from Lake Como. It was a beautiful moment to share, I hope these images bring you back there. Feel free to download any of them.<br/><br/>
+                            Sophia"
+                         </p>
+                    </div>
+                </div>
+            );
+        } else if (event.id === 'aspen-winter-2024') {
+            caMessage = (
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#1A1A1A]/5 flex gap-5 mb-8">
+                    <div className="shrink-0">
+                        <img src={state.ca.avatar} className="w-12 h-12 rounded-full object-cover border border-[#1A1A1A]/10" />
+                    </div>
+                    <div className="space-y-2">
+                         <p className="text-sm font-serif italic text-[#1A1A1A] leading-relaxed">
+                             <span className="font-bold font-sans not-italic text-[10px] uppercase tracking-widest text-[#B08D57] block mb-2">Message from Sofia</span>
+                            "Andrea,<br/><br/>
+                            Some moments from Aspen I wanted to share with you.<br/>
+                            A very special atmosphere, I hope you enjoy revisiting it.<br/><br/>
+                            Sophia"
+                         </p>
+                    </div>
+                </div>
+            );
+        }
+
         // Simple Gallery View for Past Events (like Lake Como, Aspen)
         return (
              <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] animate-luxury-fade relative">
@@ -195,10 +248,15 @@ export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat
                      <p className="text-sm font-sans text-[#1A1A1A]/70 leading-relaxed">{event.description}</p>
                      
                      <div className="pt-6">
+                        
+                        {caMessage}
+
                         <h3 className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-4">Gallery</h3>
                         <div className="grid grid-cols-2 gap-3">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="aspect-square bg-[#E8E2D9] rounded-lg animate-pulse opacity-50" />
+                            {GALLERY_IMAGES.map((src, i) => (
+                                <div key={i} className="aspect-[4/5] rounded-lg overflow-hidden relative group cursor-pointer shadow-sm">
+                                    <img src={src} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                </div>
                             ))}
                         </div>
                      </div>
@@ -331,9 +389,16 @@ export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat
 export const PlanVisitScreen: React.FC<{ goBack: any; navigate: any }> = ({ goBack, navigate }) => {
     const [selectedDate, setSelectedDate] = useState<number | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
+    const [selectedReason, setSelectedReason] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState(false);
+    
     const dates = [{ d: '26', w: 'Mon' }, { d: '27', w: 'Tue' }, { d: '28', w: 'Wed' }, { d: '29', w: 'Thu' }, { d: '30', w: 'Fri' }, { d: '01', w: 'Sat' }];
     const times = ['10:00', '11:30', '14:00', '15:30', '17:00'];
+    const reasons = [
+        { id: 'styling', label: 'Styling Appointment' },
+        { id: 'mto', label: 'MTO Consultation' },
+        { id: 'pickup', label: 'Collection Pick-up' }
+    ];
 
     if (submitted) {
         return (
@@ -345,14 +410,39 @@ export const PlanVisitScreen: React.FC<{ goBack: any; navigate: any }> = ({ goBa
         );
     }
     return (
-        <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade">
+        <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade relative">
             <Header title="Plan a Visit" showBack onBack={goBack} showProfile={false} />
-            <div className="flex-1 p-6 space-y-8 overflow-y-auto">
+            <div className="p-6 space-y-8">
                 <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Select a Date</h2><div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">{dates.map((date, i) => (<button key={i} onClick={() => setSelectedDate(i)} className={`min-w-[64px] h-[80px] rounded-xl flex flex-col items-center justify-center border transition-all ${selectedDate === i ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}><span className="text-xs font-serif italic opacity-80">{date.w}</span><span className="text-xl font-bold font-sans">{date.d}</span></button>))}</div></div>
                 <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Select Time</h2><div className="grid grid-cols-3 gap-3">{times.map((time, i) => (<button key={i} onClick={() => setSelectedTime(time)} className={`py-3 rounded-lg text-sm font-sans font-medium border transition-all ${selectedTime === time ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}>{time}</button>))}</div></div>
-                <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Reason for visit</h2><div className="bg-white p-4 rounded-xl shadow-sm space-y-3"><div className="flex items-center gap-3 p-3 rounded-lg bg-[#F9F8F6]"><div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"><div className="w-2 h-2 rounded-full bg-[#1A1A1A]" /></div><span className="text-sm text-[#1A1A1A]">Styling Appointment</span></div><div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#F9F8F6] transition-colors cursor-pointer opacity-60"><div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"></div><span className="text-sm text-[#1A1A1A]">MTO Consultation</span></div><div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#F9F8F6] transition-colors cursor-pointer opacity-60"><div className="w-4 h-4 rounded-full border border-[#1A1A1A] flex items-center justify-center"></div><span className="text-sm text-[#1A1A1A]">Collection Pick-up</span></div></div></div>
+                
+                <div className="space-y-4">
+                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Reason for visit</h2>
+                    <div className="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                        {reasons.map((r) => (
+                             <div 
+                                key={r.id}
+                                onClick={() => setSelectedReason(r.id)}
+                                className={`flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer ${selectedReason === r.id ? 'bg-[#1A1A1A] text-white' : 'bg-[#F9F8F6] text-[#1A1A1A] hover:bg-[#E8E2D9]'}`}
+                             >
+                                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${selectedReason === r.id ? 'border-white' : 'border-[#1A1A1A]'}`}>
+                                    {selectedReason === r.id && <div className="w-2 h-2 rounded-full bg-white" />}
+                                </div>
+                                <span className={`text-sm ${selectedReason === r.id ? 'text-white' : 'text-[#1A1A1A]'}`}>{r.label}</span>
+                             </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-            <div className="p-6 bg-[#F4F0EA] border-t border-black/5"><button disabled={selectedDate === null || selectedTime === null} onClick={() => setSubmitted(true)} className="w-full bg-[#A64B3E] text-white py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed">Request Confirmation</button></div>
+            <div className="p-6 bg-[#F4F0EA] border-t border-black/5 pb-32">
+                <button 
+                    disabled={selectedDate === null || selectedTime === null || selectedReason === null} 
+                    onClick={() => setSubmitted(true)} 
+                    className="w-full bg-[#A64B3E] text-white py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    Request Confirmation
+                </button>
+            </div>
         </div>
     );
 };
@@ -365,14 +455,14 @@ export const PersonalPreferencesScreen: React.FC<{ state: State; goBack: any; na
           <div className="space-y-3"><h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Size</h3><div className="bg-[#F9F8F6] rounded-xl overflow-hidden"><div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 border-b border-[#1A1A1A]/5 cursor-pointer active:bg-[#E8E2D9] transition-colors"><span className="text-sm text-[#1A1A1A]">My Measurements</span><ChevronRight className="w-4 h-4 text-[#A64B3E]" /></div><div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 cursor-pointer active:bg-[#E8E2D9] transition-colors"><span className="text-sm text-[#1A1A1A]">My size</span><ChevronRight className="w-4 h-4 text-[#A64B3E]" /></div></div></div>
           <div className="space-y-3"><h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Preferences</h3><div className="bg-[#F9F8F6] rounded-xl overflow-hidden"><PreferenceRow label="Color preference" value="Blue, Red, Grey" /><PreferenceRow label="Destination" value="Regular holiday destination" /><PreferenceRow label="Food & Beverage" value="Coffee & tea, soft bevarages..." /><PreferenceRow label="My hobbies & interest" value="Cars, Fitness, Travels..." border={false} /></div></div>
        </div>
-       <div className="p-6 pb-10 space-y-6 bg-[#F4F0EA]"><p className="text-[10px] text-[#1A1A1A]/50 text-center leading-relaxed font-serif">This app does not store any private data.<br/>Read the the <span className="underline cursor-pointer">Terms & Conditions.</span></p><button onClick={() => navigate('account')} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform">Save</button></div>
+       <div className="p-6 pb-32 space-y-6 bg-[#F4F0EA]"><p className="text-[10px] text-[#1A1A1A]/50 text-center leading-relaxed font-serif">This app does not store any private data.<br/>Read the the <span className="underline cursor-pointer">Terms & Conditions.</span></p><button onClick={() => navigate('account')} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform">Save</button></div>
     </div>
   );
 };
 
 export const MySizeScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
   return (
-    <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade">
+    <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade pb-32">
       <Header title="My Sizes" showBack onBack={() => goBack()} showProfile={false} />
       <div className="p-6 space-y-4">
          <div className="bg-white rounded-xl p-6 shadow-sm space-y-6">
@@ -381,6 +471,30 @@ export const MySizeScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
              <div className="grid grid-cols-2 gap-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Hat</div><div className="text-xl font-serif">M</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Gloves</div><div className="text-xl font-serif">9</div></div></div>
          </div>
          <p className="text-[10px] text-center text-[#1A1A1A]/50">Based on your last scan on Oct 24, 2024</p>
+      
+         {/* Family Sizes Module */}
+         <div className="pt-6 space-y-3">
+             <h3 className="text-lg font-serif text-[#1A1A1A]">Family Sizes</h3>
+             <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                 <div className="flex items-center justify-between p-5 border-b border-[#1A1A1A]/5 cursor-pointer active:bg-[#F9F8F6] transition-colors">
+                     <div>
+                        <div className="text-sm font-sans text-[#1A1A1A]">Riccardo</div>
+                        <div className="text-[10px] text-[#1A1A1A]/60 uppercase tracking-wider font-bold mt-0.5">Husband</div>
+                     </div>
+                     <ChevronRight className="w-4 h-4 text-[#A64B3E]" strokeWidth={1.5} />
+                 </div>
+                 <div className="flex items-center justify-between p-5 cursor-pointer active:bg-[#F9F8F6] transition-colors">
+                     <div>
+                        <div className="text-sm font-sans text-[#1A1A1A]">Lucia</div>
+                        <div className="text-[10px] text-[#1A1A1A]/60 uppercase tracking-wider font-bold mt-0.5">Daughter</div>
+                     </div>
+                     <ChevronRight className="w-4 h-4 text-[#A64B3E]" strokeWidth={1.5} />
+                 </div>
+             </div>
+             <button className="w-full py-4 border border-[#1A1A1A]/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A] active:scale-[0.98] transition-all bg-white shadow-sm flex items-center justify-center gap-2 hover:bg-[#F9F8F6]">
+                <Plus className="w-3 h-3" /> Add Member
+             </button>
+         </div>
       </div>
     </div>
   );

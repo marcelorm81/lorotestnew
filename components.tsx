@@ -182,6 +182,113 @@ export const TabNavigation: React.FC<{ current: ScreenType; onNavigate: (s: Scre
   );
 };
 
+// --- Offline Script Data ---
+const OFFLINE_SCRIPT = [
+  {
+    keywords: ['hello', 'hi', 'hey', 'good morning', 'good evening', 'how are you', 'sophia', 'sofia'],
+    responses: [
+      "Hello. Always nice to hear from you. How can I help today?",
+      "Hi, I’m here. What would you like to look at?",
+      "Good evening. I hope your day went well. Tell me what you need and I’ll take care of it."
+    ]
+  },
+  {
+    keywords: ['new', 'new arrivals', 'collection', 'latest', 'just arrived', 'season', 'drop'],
+    responses: [
+      "We’ve just received a few beautiful pieces. You’ll find them in the Collections section.",
+      "There are some new arrivals that fit your style very well. I can guide you through them if you like.",
+      "If you want, I can shortlist the most relevant pieces for you and come back with a suggestion."
+    ]
+  },
+  {
+    keywords: ['exclusive', 'limited', 'early access', 'reserve', 'hold'],
+    responses: [
+      "There is a limited drop available right now. If anything speaks to you, I can reserve it immediately.",
+      "Some pieces are quite rare. I’d suggest we secure them first and you decide calmly after.",
+      "Would you like me to place a hold, or would you prefer to confirm first?"
+    ]
+  },
+  {
+    keywords: ['available', 'stock', 'sold out', 'size'],
+    responses: [
+      "Let me check availability for you and I’ll come back shortly.",
+      "If it’s limited, I’ll secure it first and confirm details right after.",
+      "Tell me the size and colour you’re considering and I’ll take care of the rest."
+    ]
+  },
+  {
+    keywords: ['mto', 'made to order', 'bespoke', 'atelier', 'timeline', 'status', 'ready', 'delayed'],
+    responses: [
+      "I’ll check with the atelier and come back to you with an accurate update.",
+      "I prefer to confirm properly rather than guess. I’ll update you later today or tomorrow at the latest.",
+      "If there’s any delay, I’ll explain clearly and propose the best option."
+    ]
+  },
+  {
+    keywords: ['event', 'invitation', 'rsvp', 'join', 'attend'],
+    responses: [
+      "This event takes place on the date shown in the app. Would you like me to reserve your place?",
+      "If you confirm, I’ll take care of the RSVP and any preferences.",
+      "I can also coordinate details around the event if you’d like."
+    ]
+  },
+  {
+    keywords: ['wardrobe', 'add item', 'organize', 'missing', 'create wardrobe'],
+    responses: [
+      "Of course. Tell me what this wardrobe is about and I’ll help you shape it.",
+      "If something is missing, I can help locate it or add it manually.",
+      "If you’d like, I can also suggest pieces that would complete this wardrobe nicely."
+    ]
+  },
+  {
+    keywords: ['measurements', 'fit', 'wife', 'kids', 'family'],
+    responses: [
+      "Your sizes are already saved, so you shouldn’t need to re-enter anything.",
+      "We can also add profiles for your wife or family if you’d like.",
+      "If you’re unsure about fit on a specific piece, send it to me and I’ll advise."
+    ]
+  },
+  {
+    keywords: ['appointment', 'book', 'visit', 'meet', 'availability'],
+    responses: [
+      "Of course. Tell me the reason for the visit and your preferred dates.",
+      "I’ll prioritise your usual advisor and confirm availability.",
+      "Once it’s confirmed, you’ll receive an update here and by email."
+    ]
+  },
+  {
+    keywords: ['repair', 'aftercare', 'fix', 'clean', 'service'],
+    responses: [
+      "Yes, we can take care of that. Tell me the item and what needs attention.",
+      "I’ll prepare everything so it’s seamless when you arrive.",
+      "I’ll update you as soon as the atelier confirms timing."
+    ]
+  },
+  {
+    keywords: ['annoyed', 'upset', 'frustrated', 'disappointed', 'worried'],
+    responses: [
+      "I understand. Let me take care of this now and I’ll come back to you today.",
+      "I’ll handle it personally and keep you updated."
+    ]
+  }
+];
+
+const FALLBACK_RESPONSES = [
+  "Of course. Just to be sure I guide you properly, is this about a product, an order, or an event?",
+  "I’m here. Tell me a bit more and I’ll handle it.",
+  "Let me know what you’d like to do and I’ll take care of the details."
+];
+
+const getOfflineResponse = (text: string) => {
+  const lowerText = text.toLowerCase();
+  for (const category of OFFLINE_SCRIPT) {
+    if (category.keywords.some(k => lowerText.includes(k))) {
+      return category.responses[Math.floor(Math.random() * category.responses.length)];
+    }
+  }
+  return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)];
+};
+
 export const ChatBottomSheet: React.FC<{ onClose: () => void; ca: any }> = ({ onClose, ca }) => {
   const [messages, setMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([
     { role: 'model', text: `Good evening, Andrea. How may I assist you with your Loro Piana collection today?` }
@@ -202,6 +309,7 @@ export const ChatBottomSheet: React.FC<{ onClose: () => void; ca: any }> = ({ on
     setLoading(true);
 
     try {
+      if (!process.env.API_KEY) throw new Error("No API Key");
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
@@ -215,7 +323,11 @@ export const ChatBottomSheet: React.FC<{ onClose: () => void; ca: any }> = ({ on
       });
       setMessages(prev => [...prev, { role: 'model', text: response.text || "I'll check that for you." }]);
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'model', text: "Please forgive me, I'm experiencing a brief connection issue." }]);
+      // Simulate network delay for offline feeling
+      setTimeout(() => {
+          const offlineReply = getOfflineResponse(userMsg);
+          setMessages(prev => [...prev, { role: 'model', text: offlineReply }]);
+      }, 800);
     } finally {
       setLoading(false);
     }
@@ -231,6 +343,7 @@ export const ChatBottomSheet: React.FC<{ onClose: () => void; ca: any }> = ({ on
             <div className="text-center">
               <div className="text-[10px] font-bold text-[#B08D57] uppercase tracking-[0.4em] font-sans">Client Advisor</div>
               <div className="text-xl font-serif italic text-[#1A1A1A] mt-1">{ca.name}</div>
+              <div className="text-[10px] text-[#1A1A1A]/50 font-sans mt-2 tracking-wide">Typically replies within 12 hrs</div>
             </div>
           </div>
           <button onClick={onClose} className="absolute top-8 right-8 p-3 bg-black/5 rounded-full active:scale-90 transition-transform"><X className="w-5 h-5" strokeWidth={1} /></button>
@@ -243,6 +356,15 @@ export const ChatBottomSheet: React.FC<{ onClose: () => void; ca: any }> = ({ on
               </div>
             </div>
           ))}
+          {loading && (
+             <div className="flex justify-start">
+               <div className="bg-white p-6 rounded-xl rounded-tl-none shadow-sm flex gap-1.5 items-center">
+                  <div className="w-1.5 h-1.5 bg-[#1A1A1A]/30 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-1.5 h-1.5 bg-[#1A1A1A]/30 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-1.5 h-1.5 bg-[#1A1A1A]/30 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+               </div>
+             </div>
+          )}
         </div>
         <div className="p-8 pb-12 bg-white/50 backdrop-blur-xl border-t border-black/5">
           <div className="relative flex items-center">

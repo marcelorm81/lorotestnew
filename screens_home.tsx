@@ -423,7 +423,7 @@ export const HomeScreen: React.FC<{ state: State; navigate: (s: ScreenType, p?: 
                <img src={LORO_SYMBOL_PNG} className="w-16 opacity-80 mix-blend-multiply" alt="Loro Piana Crest" />
             </div>
          </div>
-         <div onClick={toggleChat} className="bg-[#F9F8F6] p-1 rounded-xl shadow-lg flex active:scale-[0.99] transition-transform relative overflow-hidden h-32">
+         <div onClick={() => navigate('mto')} className="bg-[#F9F8F6] p-1 rounded-xl shadow-lg flex active:scale-[0.99] transition-transform relative overflow-hidden h-32">
             <div className="absolute inset-2 border border-dashed border-black/10 rounded-lg pointer-events-none z-10" />
             <div className="flex-1 p-4 flex flex-col justify-center text-[#1A1A1A] relative z-20 pl-6">
                <div className="text-[8px] text-[#A64B3E] font-sans font-bold tracking-wide mb-1">André Shirt</div>
