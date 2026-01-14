@@ -1,0 +1,7 @@
+{
+  "description": "Luxury Loro Piana VIC experience with bespoke wardrobe management and MTO tracking.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "name": "Loro Piana VIC Lounge"
+}

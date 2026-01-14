@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <title>Loro Piana VIC Lounge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Times Now';
+      src: url('https://raw.githubusercontent.com/marcelorm81/LP_assets/8a5b0491145f9ff4038dbea86393b7f597484bc3/times-now-light.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Times Now';
+      src: url('https://raw.githubusercontent.com/marcelorm81/LP_assets/7815c54c7bed812dff439269530814f0abf4b2d5/times-now-light-italic.woff2') format('woff2');
+      font-weight: normal;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    :root {
+      --lp-cream: #F4F0EA;
+      --lp-sand: #E8E2D9;
+      --lp-charcoal: #1A1A1A;
+      --lp-gold: #B08D57;
+      --lp-red-dark: #2D0A0A;
+      --lp-red-glow: #8B0000;
+      
+      /* Typography */
+      --font-serif: "Times Now", "Times New Roman", Times, serif;
+      --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      
+      /* Adaptive Stage Variables */
+      --stage-ratio: 0.4615; /* ~9/19.5 */
+      --stage-width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      :root {
+        --stage-width: calc(100vh * var(--stage-ratio));
+      }
+      
+      /* On desktop, fixed elements must be constrained to the stage width and centered */
+      .mobile-stage-fixed {
+        width: var(--stage-width) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+      }
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--lp-cream);
+      color: var(--lp-charcoal);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: none; 
+    }
+    
+    h1, h2, h3, h4, h5, h6, .font-serif {
+      font-family: var(--font-serif);
+    }
+
+    .font-sans {
+      font-family: var(--font-sans);
+    }
+    
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .pt-safe { padding-top: env(safe-area-inset-top); }
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-luxury-fade {
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .store-access-bg {
+      background: radial-gradient(circle at center, var(--lp-red-glow) 0%, var(--lp-red-dark) 100%);
+    }
+
+    .perspective-card {
+      perspective: 2000px;
+    }
+    .card-flipper {
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      backface-visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .card-face-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Elegant Gradient Animation */
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .lp-gradient-bg {
+      background: linear-gradient(335deg, #9D5248 -51.19%, #121010 51.36%, #9D5248 184.87%);
+      background-size: 200% 200%;
+      animation: gradient-flow 15s ease infinite;
+    }
+  </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
+    "gsap": "https://esm.sh/gsap@3.12.2",
+    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "gsap/": "https://esm.sh/gsap@^3.14.2/"
+  }
+}
+</script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
