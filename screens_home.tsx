@@ -297,14 +297,16 @@ export const WelcomeScreen: React.FC<{ onStart: () => void }> = ({ onStart }) =>
 
 export const LoginScreen: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   const [code, setCode] = useState(['', '', '', '']);
+  const [error, setError] = useState(false);
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleChange = (index: number, value: string) => {
-    if (!/^[a-zA-Z]*$/.test(value)) return;
+    if (!/^[a-zA-Z0-9]*$/.test(value)) return;
     const newCode = [...code];
     newCode[index] = value.toUpperCase().slice(-1);
     setCode(newCode);
     if (value && index < 3) inputs.current[index + 1]?.focus();
+    setError(false);
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
@@ -313,8 +315,19 @@ export const LoginScreen: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
 
   useEffect(() => {
     if (code.every(char => char !== '')) {
-      const timer = setTimeout(() => onLogin(), 500);
-      return () => clearTimeout(timer);
+      const fullCode = code.join('').toUpperCase();
+      if (fullCode === 'F3F3') {
+          const timer = setTimeout(() => onLogin(), 500);
+          return () => clearTimeout(timer);
+      } else {
+          // Reset on wrong code
+          const timer = setTimeout(() => {
+              setCode(['', '', '', '']);
+              setError(true);
+              inputs.current[0]?.focus();
+          }, 500);
+          return () => clearTimeout(timer);
+      }
     }
   }, [code, onLogin]);
 
@@ -332,7 +345,17 @@ export const LoginScreen: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
         </div>
         <div className="flex gap-4 justify-center">
           {code.map((char, i) => (
-            <input key={i} ref={el => { inputs.current[i] = el; }} type="text" maxLength={1} value={char} onChange={e => handleChange(i, e.target.value)} onKeyDown={e => handleKeyDown(i, e)} className="w-10 h-14 bg-white/5 border-b border-white/20 text-center text-xl font-light focus:outline-none focus:border-[#B08D57] transition-colors rounded-t-md font-sans" autoFocus={i === 0} />
+            <input 
+                key={i} 
+                ref={el => { inputs.current[i] = el; }} 
+                type="text" 
+                maxLength={1} 
+                value={char} 
+                onChange={e => handleChange(i, e.target.value)} 
+                onKeyDown={e => handleKeyDown(i, e)} 
+                className={`w-14 h-20 bg-white/5 border-b text-center text-3xl font-light focus:outline-none transition-colors rounded-t-md font-sans ${error ? 'border-red-500/50 text-red-200' : 'border-white/20 focus:border-[#B08D57] text-white'}`} 
+                autoFocus={i === 0} 
+            />
           ))}
         </div>
       </div>
