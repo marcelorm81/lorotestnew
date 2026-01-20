@@ -79,10 +79,14 @@ export const MTOScreen: React.FC<{ state: State; goBack: () => void; navigate: a
   const mtoDetails = { title: "Traveller Jacket", purchaseDate: "Purchased 23 June 2022", heroImage: "https://raw.githubusercontent.com/marcelorm81/LP_assets/ab1bc08d9d5af798814ab6f1bd91f7f1c432a15c/MTO.png", stepImage: "https://raw.githubusercontent.com/marcelorm81/LP_assets/71ff099ed2c4ce74c83c5dd5ee00f7842813ee0f/jacket2.jpg", updatesText: `Dear ${state.user.name.split(' ')[0]},\nWe are currently assembling your Traveller Jacket.\nTrack the progress of your garment right here`, specs: ["Fabric selection: Linen & Cotton Blend.", "Colour: Icy Stone (W1BU)."] };
   return (
     <div className="animate-luxury-fade bg-[#F4F0EA] min-h-full flex flex-col pb-10">
-      <div className="flex items-center justify-between px-6 py-4 sticky top-0 bg-[#F4F0EA]/90 backdrop-blur-md z-40 pt-safe">
-        <div className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-80 font-sans text-[#1A1A1A]">Made to Order</div>
-        <button onClick={goBack} className="w-8 h-8 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white active:scale-90 transition-transform"><X className="w-4 h-4" /></button>
+      {/* Centered Header matching DropsScreen style */}
+      <div className="sticky top-0 left-0 right-0 z-50 px-6 pt-safe py-6 flex justify-center items-center bg-[#F4F0EA]/90 backdrop-blur-md">
+        <div className="text-[13px] font-bold tracking-normal uppercase opacity-80 font-sans text-[#1A1A1A]">Made to Order</div>
+        <div className="absolute right-6">
+            <button onClick={goBack} className="w-8 h-8 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white active:scale-90 transition-transform"><X className="w-4 h-4" /></button>
+        </div>
       </div>
+
       <div className="w-full flex justify-center -mt-4 mb-6 relative z-0"><img src={mtoDetails.heroImage} className="w-[85%] max-w-md object-contain mix-blend-multiply" alt="Jacket Sketch" /></div>
       <div className="px-6 relative z-10 space-y-8">
          <div className="space-y-1"><h1 className="text-3xl font-serif font-medium text-[#1A1A1A]">{mtoDetails.title}</h1><p className="text-sm font-serif text-[#1A1A1A]/60">{mtoDetails.purchaseDate}</p></div>
@@ -110,12 +114,17 @@ export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }
     const otherEvents = state.events.filter(e => e.id !== mainEvent.id);
 
     return (
-        <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] font-sans animate-luxury-fade overflow-x-hidden relative">
+        <div className="bg-[#1A1A1A] min-h-screen pb-28 text-white font-sans animate-luxury-fade overflow-x-hidden relative">
             
+            {/* Header: Absolute, Transparent, No Blur, Overlay on Video */}
+            <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-safe py-6 flex justify-center items-center pointer-events-none">
+                <div className="text-[13px] font-bold tracking-normal uppercase opacity-80 font-sans text-white drop-shadow-md">Your events</div>
+            </div>
+
             {/* Hero Video Section - Full Screen Impact */}
             <div 
                 onClick={() => navigate('event-detail', { selectedEventId: mainEvent.id })}
-                className="relative h-[90vh] w-full cursor-pointer group"
+                className="relative h-[80vh] w-full cursor-pointer group"
             >
                 <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
                     <source src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/loronew.mp4" type="video/mp4" />
@@ -133,7 +142,7 @@ export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }
                     <div className="mb-8">
                         <h1 className="text-3xl font-sans font-bold leading-tight">Set Foot</h1>
                         <h1 className="text-3xl font-sans font-bold leading-tight">aboard My Song,</h1>
-                        <h2 className="text-3xl font-serif italic font-light leading-tight">at the Loro Piana</h2>
+                        <h2 className="text-3xl font-serif italic font-light leading-tight">at Loro Piana</h2>
                         <h2 className="text-3xl font-serif italic font-light leading-tight">Giraglia</h2>
                     </div>
                     
@@ -146,21 +155,21 @@ export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }
             </div>
 
             {/* Past Events Section */}
-            <div className="px-6 pb-8 space-y-8 bg-[#F4F0EA]">
-                <div className="space-y-2 pt-8 border-t border-[#1A1A1A]/10">
-                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Past Events</h2>
-                    <p className="text-sm font-sans text-[#1A1A1A]/60 max-w-[250px] leading-relaxed">
+            <div className="px-6 pb-8 space-y-8 bg-[#1A1A1A] text-white">
+                <div className="space-y-2 pt-8 border-t border-white/10">
+                    <h2 className="text-2xl font-serif text-white">Past Events</h2>
+                    <p className="text-sm font-sans text-white/60 max-w-[250px] leading-relaxed">
                         Relive the Loro Piana moments you've attended.
                     </p>
                 </div>
 
                 <div className="space-y-4">
                     {otherEvents.map(evt => (
-                        <div key={evt.id} className="bg-white p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-[#1A1A1A]/5 group cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate('event-detail', { selectedEventId: evt.id }); }}>
+                        <div key={evt.id} className="bg-white/5 p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-white/10 group cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate('event-detail', { selectedEventId: evt.id }); }}>
                             <div className="flex-1 p-6 flex flex-col justify-center space-y-2 relative">
-                                <div className="text-[9px] text-[#A64B3E] font-bold uppercase tracking-widest">{evt.date}</div>
-                                <h3 className="text-lg font-serif italic text-[#1A1A1A] leading-tight max-w-[120px]">{evt.title}</h3>
-                                <div className="flex items-center gap-1 text-[8px] text-[#1A1A1A]/40 uppercase tracking-wider group-hover:text-[#A64B3E] transition-colors">
+                                <div className="text-[9px] text-[#B08D57] font-bold uppercase tracking-widest">{evt.date}</div>
+                                <h3 className="text-lg font-serif italic text-white leading-tight max-w-[120px]">{evt.title}</h3>
+                                <div className="flex items-center gap-1 text-[8px] text-white/40 uppercase tracking-wider group-hover:text-[#B08D57] transition-colors">
                                     <span>View Gallery</span> <ArrowRight className="w-3 h-3" />
                                 </div>
                             </div>
@@ -289,8 +298,10 @@ export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat
                     
                     {/* Updated Title Typography */}
                     <div className="mb-8">
-                        <h1 className="text-3xl font-sans font-bold leading-tight mb-0.5">Set Foot aboard My Song,</h1>
-                        <h2 className="text-3xl font-serif italic font-light leading-tight">at the Loro Piana Giraglia</h2>
+                        <h1 className="text-3xl font-sans font-bold leading-tight">Set Foot</h1>
+                        <h1 className="text-3xl font-sans font-bold leading-tight">aboard My Song,</h1>
+                        <h2 className="text-3xl font-serif italic font-light leading-tight">at Loro Piana</h2>
+                        <h2 className="text-3xl font-serif italic font-light leading-tight">Giraglia</h2>
                     </div>
                     
                     <div className="mt-8">
@@ -500,6 +511,9 @@ export const MySizeScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
   );
 };
 
+// Constant for the QR code SVG path
+const QR_PATH = "M94 115H88V109H94V115ZM115 104H109V109H115V115H98V103H109V98H115V104ZM39 114H1V76H39V114ZM71 44H76V49H81V70H76V82H72V103H83V114H77V109H72V114H66V109H50V103H66V93H60V98H54V92H60V81H54V76H60V71H66V82H71V71H66V65H55V70H49V65H44V59H38V53H33V59H27V53H22V48H49V64H55V43H66V33H71V44ZM6 109H34V81H6V109ZM31 106H9V84H31V106ZM94 104H88V98H94V104ZM50 103H44V97H50V103ZM93 70H98V87H88V93H82V70H87V65H93V70ZM115 92H109V82H104V70H109V65H115V92ZM88 81H92V71H88V81ZM17 71H0V66H6V60H12V55H6V49H12V44H17V71ZM37 71H31V65H37V71ZM61 60H66V48H61V60ZM99 55H93V60H87V54H93V43H99V55ZM115 60H104V49H110V44H115V60ZM51 39H45V33H51V39ZM39 38H1V0H39V38ZM115 38H77V0H115V38ZM6 33H34V5H6V33ZM82 33H110V5H82V33ZM31 30H9V8H31V30ZM107 30H85V8H107V30ZM71 17H66V22H71V28H49V22H44V16H50V22H61V16H66V11H60V5H55V11H49V5H44V0H71V17Z";
+
 export const StoreKeyScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -509,6 +523,10 @@ export const StoreKeyScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const shineRef = useRef<HTMLDivElement>(null);
   const specularRef = useRef<HTMLDivElement>(null);
+  const backShineRef = useRef<HTMLDivElement>(null);
+  const backSpecularRef = useRef<HTMLDivElement>(null);
+  const logoGradientRef = useRef<HTMLDivElement>(null);
+  const qrGradientRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!cardRef.current || !cardContainerRef.current) return;
@@ -520,39 +538,130 @@ export const StoreKeyScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
     const rotateX = (centerY - clientY) / 20;
     const rotateY = (clientX - centerX) / 20;
     gsap.to(cardRef.current, { rotateX: rotateX, rotateY: isFlipped ? 180 - rotateY : rotateY, duration: 0.2, ease: 'power1.out', transformPerspective: 1000 });
+    
+    // Calculations for gradient movement
+    const relX = (clientX - rect.left) / rect.width;
+    const relY = (clientY - rect.top) / rect.height;
+
+    // Front Reflections
     if (shineRef.current && specularRef.current) {
-      const relX = (clientX - rect.left) / rect.width;
-      const relY = (clientY - rect.top) / rect.height;
       gsap.to(shineRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, opacity: 0.3, duration: 0.4 });
       gsap.to(specularRef.current, { x: (relX - 0.5) * -120, y: (relY - 0.5) * -120, opacity: 0.4, duration: 0.2 });
     }
+
+    // Back Reflections
+    if (backShineRef.current && backSpecularRef.current) {
+      gsap.to(backShineRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, opacity: 0.3, duration: 0.4 });
+      gsap.to(backSpecularRef.current, { x: (relX - 0.5) * -120, y: (relY - 0.5) * -120, opacity: 0.4, duration: 0.2 });
+    }
+
+    // Metallic Foil Mask Movement (Parallax Effect)
+    if (logoGradientRef.current) {
+        gsap.to(logoGradientRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, duration: 0.1 });
+    }
+    if (qrGradientRef.current) {
+        gsap.to(qrGradientRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, duration: 0.1 });
+    }
   };
-  const handleMouseLeave = () => { if (!cardRef.current) return; gsap.to(cardRef.current, { rotateX: 0, rotateY: isFlipped ? 180 : 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }); if (shineRef.current) gsap.to(shineRef.current, { opacity: 0, duration: 0.5 }); if (specularRef.current) gsap.to(specularRef.current, { opacity: 0, duration: 0.5 }); };
+
+  const handleMouseLeave = () => { 
+    if (!cardRef.current) return; 
+    gsap.to(cardRef.current, { rotateX: 0, rotateY: isFlipped ? 180 : 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }); 
+    
+    // Reset Front
+    if (shineRef.current) gsap.to(shineRef.current, { opacity: 0, duration: 0.5 }); 
+    if (specularRef.current) gsap.to(specularRef.current, { opacity: 0, duration: 0.5 }); 
+    
+    // Reset Back
+    if (backShineRef.current) gsap.to(backShineRef.current, { opacity: 0, duration: 0.5 });
+    if (backSpecularRef.current) gsap.to(backSpecularRef.current, { opacity: 0, duration: 0.5 });
+  };
+  
   useEffect(() => { if (!cardRef.current) return; gsap.to(cardRef.current, { rotateY: isFlipped ? 180 : 0, duration: 0.8, ease: 'back.out(1.2)' }); }, [isFlipped]);
+
+  // Metallic gradient style based on card accent
+  const metallicGradientStyle = {
+      background: `linear-gradient(135deg, ${cardStyle.accent} 20%, #ffffff 50%, ${cardStyle.accent} 80%)`,
+      backgroundSize: '200% 200%'
+  };
 
   return (
     <div className="fixed inset-0 w-full h-[100dvh] flex flex-col store-access-bg text-white animate-luxury-fade overflow-hidden z-50 mobile-stage-fixed bg-black">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none" />
-      <div className="h-14 shrink-0 px-8 pt-safe flex justify-between items-center relative z-20"><div /><div className="text-[8px] font-bold tracking-[0.5em] uppercase opacity-70 font-sans">Access Portal</div><button onClick={() => setIsEditing(!isEditing)} className={`p-2.5 backdrop-blur-md rounded-full active:scale-90 transition-all ${isEditing ? 'bg-white text-black' : 'bg-white/10 text-white'}`}><Edit2 className="w-3.5 h-3.5" strokeWidth={1.5} /></button></div>
+      <div className="h-14 shrink-0 px-8 pt-safe flex justify-between items-center relative z-20"><div /><div className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-80 font-sans">Access Portal</div><button onClick={() => setIsEditing(!isEditing)} className={`p-2.5 backdrop-blur-md rounded-full active:scale-90 transition-all ${isEditing ? 'bg-white text-black' : 'bg-white/10 text-white'}`}><Edit2 className="w-3.5 h-3.5" strokeWidth={1.5} /></button></div>
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center relative z-10 w-full px-8 py-2">
-        <div ref={cardContainerRef} className="relative w-full aspect-[1/1.45] max-h-[55vh] max-w-[340px] cursor-pointer touch-none" style={{ perspective: '1200px' }} onMouseMove={handleMouseMove} onTouchMove={handleMouseMove} onMouseLeave={handleMouseLeave} onTouchEnd={handleMouseLeave} onClick={() => !isEditing && setIsFlipped(!isFlipped)}>
+        {/* Updated Aspect Ratio: 1 / 1.586 (Credit Card Standard) and Max Width 300px */}
+        <div ref={cardContainerRef} className="relative w-full aspect-[1/1.586] max-w-[300px] cursor-pointer touch-none" style={{ perspective: '1200px' }} onMouseMove={handleMouseMove} onTouchMove={handleMouseMove} onMouseLeave={handleMouseLeave} onTouchEnd={handleMouseLeave} onClick={() => !isEditing && setIsFlipped(!isFlipped)}>
           <div ref={cardRef} className="w-full h-full relative" style={{ transformStyle: 'preserve-3d', transition: 'none' }}>
+            
+            {/* FRONT FACE */}
             <div className="absolute inset-0 w-full h-full rounded-2xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col items-center justify-between overflow-hidden transition-colors duration-500" style={{ backgroundColor: cardStyle.bg, backfaceVisibility: 'hidden' }}>
-              <div className="absolute inset-0 opacity-[0.6] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/leather.png')] bg-[length:300px_300px]" /><div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" /><div ref={shineRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-soft-light" style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.8) 50%, transparent 60%)', filter: 'blur(20px)' }} /><div ref={specularRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-overlay" style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, transparent 40%)' }} />
-              <div className="relative z-10 text-center space-y-1 mt-2"><div className="text-[10px] uppercase tracking-[0.4em] font-bold opacity-90 font-sans text-shadow-sm">Andrea Sparks</div><div className="text-[6px] tracking-[0.3em] opacity-50 font-bold uppercase font-sans">Client since 2005</div></div>
-              <div className="relative z-10 flex-1 flex flex-col items-center justify-center"><div className="w-28 h-28 opacity-90 relative z-10" style={{ maskImage: `url(${LORO_SYMBOL_PNG})`, maskSize: 'contain', maskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskImage: `url(${LORO_SYMBOL_PNG})`, WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center', backgroundColor: cardStyle.accent }} /></div>
-              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-black/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner"><ShieldCheck className="w-3.5 h-3.5 opacity-60 text-white" strokeWidth={1.5} /></div>
+              <div className="absolute inset-0 opacity-[0.6] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/leather.png')] bg-[length:300px_300px]" />
+              <div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" />
+              <div ref={shineRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-soft-light" style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.8) 50%, transparent 60%)', filter: 'blur(20px)' }} />
+              <div ref={specularRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-overlay" style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, transparent 40%)' }} />
+              
+              <div className="relative z-10 text-center space-y-1 mt-2">
+                  <div className="text-[10px] uppercase font-bold opacity-90 font-sans text-shadow-sm tracking-normal">Andrea Sparks</div>
+                  <div className="text-[9px] opacity-80 font-light font-serif italic tracking-normal">Client since 2005</div>
+              </div>
+              
+              <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
+                  {/* Masked Metallic Logo */}
+                  <div className="w-28 h-28 relative z-10">
+                      <div className="w-full h-full" style={{ 
+                          maskImage: `url(${LORO_SYMBOL_PNG})`, 
+                          maskSize: 'contain', 
+                          maskRepeat: 'no-repeat', 
+                          maskPosition: 'center', 
+                          WebkitMaskImage: `url(${LORO_SYMBOL_PNG})`, 
+                          WebkitMaskSize: 'contain', 
+                          WebkitMaskRepeat: 'no-repeat', 
+                          WebkitMaskPosition: 'center' 
+                      }}>
+                           <div ref={logoGradientRef} className="absolute inset-[-50%]" style={metallicGradientStyle} />
+                      </div>
+                  </div>
+              </div>
+              
+              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-black/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner">
+                  <ShieldCheck className="w-3.5 h-3.5 opacity-60 text-white" strokeWidth={1.5} />
+              </div>
             </div>
+
+            {/* BACK FACE */}
             <div className="absolute inset-0 w-full h-full rounded-2xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col items-center justify-center overflow-hidden" style={{ backgroundColor: cardStyle.bg, backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-               <div className="absolute inset-0 opacity-[0.6] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/leather.png')] bg-[length:300px_300px]" /><div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" />
-               <div className="w-full aspect-square flex items-center justify-center relative scale-[0.85] p-2"><div className="w-full h-full relative"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 115 115" className="w-full h-full" fill="none"><path d="M94 115H88V109H94V115ZM115 104H109V109H115V115H98V103H109V98H115V104ZM39 114H1V76H39V114ZM71 44H76V49H81V70H76V82H72V103H83V114H77V109H72V114H66V109H50V103H66V93H60V98H54V92H60V81H54V76H60V71H66V82H71V71H66V65H55V70H49V65H44V59H38V53H33V59H27V53H22V48H49V64H55V43H66V33H71V44ZM6 109H34V81H6V109ZM31 106H9V84H31V106ZM94 104H88V98H94V104ZM50 103H44V97H50V103ZM93 70H98V87H88V93H82V70H87V65H93V70ZM115 92H109V82H104V70H109V65H115V92ZM88 81H92V71H88V81ZM17 71H0V66H6V60H12V55H6V49H12V44H17V71ZM37 71H31V65H37V71ZM61 60H66V48H61V60ZM99 55H93V60H87V54H93V43H99V55ZM115 60H104V49H110V44H115V60ZM51 39H45V33H51V39ZM39 38H1V0H39V38ZM115 38H77V0H115V38ZM6 33H34V5H6V33ZM82 33H110V5H82V33ZM31 30H9V8H31V30ZM107 30H85V8H107V30ZM71 17H66V22H71V28H49V22H44V16H50V22H61V16H66V11H60V5H55V11H49V5H44V0H71V17Z" fill={cardStyle.accent}/></svg></div></div>
+               <div className="absolute inset-0 opacity-[0.6] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/leather.png')] bg-[length:300px_300px]" />
+               <div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" />
+               {/* 3D Reflections for Back Face */}
+               <div ref={backShineRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-soft-light" style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.8) 50%, transparent 60%)', filter: 'blur(20px)' }} />
+               <div ref={backSpecularRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-overlay" style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, transparent 40%)' }} />
+
+               {/* QR Code Container - Scaled to 0.5 as requested */}
+               <div className="w-full aspect-square flex items-center justify-center relative scale-[0.5] p-2">
+                   <div className="w-full h-full relative">
+                       {/* Masked Metallic QR Code */}
+                        <div className="w-full h-full" style={{ 
+                          maskImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 115 115'%3E%3Cpath d='${QR_PATH}' fill='black'/%3E%3C/svg%3E")`,
+                          maskSize: 'contain', 
+                          maskRepeat: 'no-repeat', 
+                          maskPosition: 'center', 
+                          WebkitMaskImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 115 115'%3E%3Cpath d='${QR_PATH}' fill='black'/%3E%3C/svg%3E")`,
+                          WebkitMaskSize: 'contain', 
+                          WebkitMaskRepeat: 'no-repeat', 
+                          WebkitMaskPosition: 'center' 
+                        }}>
+                           <div ref={qrGradientRef} className="absolute inset-[-50%]" style={metallicGradientStyle} />
+                        </div>
+                   </div>
+               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="shrink-0 px-8 pb-8 pt-4 w-full relative z-20 flex flex-col items-center gap-6">
         <div className="w-full min-h-[100px] flex items-end justify-center">
-            {isEditing ? (<div className="w-full animate-luxury-fade space-y-4"><div className="text-center text-[9px] font-bold uppercase tracking-[0.3em] opacity-50 font-sans">Personalize Card</div><div className="flex justify-center gap-4">{CARD_COLORS.map((c) => (<button key={c.id} onClick={() => setCardStyle(c)} className={`w-10 h-10 rounded-full border-2 transition-all shadow-lg ${cardStyle.id === c.id ? 'border-white scale-110' : 'border-white/20 scale-100 hover:scale-105'}`} style={{ backgroundColor: c.bg }} />))}</div></div>) : (<div className="w-full max-w-[280px] mx-auto flex flex-col items-center space-y-4 animate-luxury-fade"><button className="relative w-full h-10 flex items-center justify-center transition-transform active:scale-95 hover:brightness-110"><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Add_to_Apple_Wallet_badge.svg" alt="Add to Apple Wallet" className="h-full object-contain" /></button><div className="w-full space-y-2"><button className="w-full py-3.5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg active:scale-[0.98] transition-all font-sans hover:bg-white/20">Notify arrival</button></div></div>)}
+            {isEditing ? (<div className="w-full animate-luxury-fade space-y-4"><div className="text-center text-[9px] font-bold uppercase opacity-50 font-sans tracking-normal">Personalize Card</div><div className="flex justify-center gap-4">{CARD_COLORS.map((c) => (<button key={c.id} onClick={() => setCardStyle(c)} className={`w-10 h-10 rounded-full border-2 transition-all shadow-lg ${cardStyle.id === c.id ? 'border-white scale-110' : 'border-white/20 scale-100 hover:scale-105'}`} style={{ backgroundColor: c.bg }} />))}</div></div>) : (<div className="w-full max-w-[280px] mx-auto flex flex-col items-center space-y-4 animate-luxury-fade"><button className="relative w-full h-10 flex items-center justify-center transition-transform active:scale-95 hover:brightness-110"><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Add_to_Apple_Wallet_badge.svg" alt="Add to Apple Wallet" className="h-full object-contain" /></button><div className="w-full space-y-2"><button className="w-full py-3.5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full text-[10px] font-bold uppercase shadow-lg active:scale-[0.98] transition-all font-sans hover:bg-white/20 tracking-normal">Notify arrival</button></div></div>)}
         </div>
         <button onClick={goBack} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white active:scale-90 transition-transform bg-black/20 backdrop-blur-md"><X className="w-5 h-5" /></button>
       </div>

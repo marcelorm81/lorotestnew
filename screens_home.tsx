@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight, ShoppingBag, MapPin, Edit2, ChevronRight, Clock, Circle } from 'lucide-react';
+import { ArrowRight, ShoppingBag, MapPin, Edit2, ChevronRight, Clock, Circle, X, Search } from 'lucide-react';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/all';
 import { Header } from './components';
@@ -126,6 +126,47 @@ const useAnimatedCountdown = (targetDate: Date) => {
 
 // --- Drops Modules ---
 
+const SearchPill: React.FC = () => {
+    const [expanded, setExpanded] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (expanded) {
+            gsap.to(containerRef.current, { width: 325, duration: 0.5, ease: "power3.out" });
+            inputRef.current?.focus();
+        } else {
+            gsap.to(containerRef.current, { width: 40, duration: 0.5, ease: "power3.out" });
+            if (inputRef.current) inputRef.current.value = '';
+            inputRef.current?.blur();
+        }
+    }, [expanded]);
+
+    return (
+        <div 
+            ref={containerRef}
+            className="h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center relative overflow-hidden shadow-lg"
+            style={{ width: 40 }}
+        >
+             <div className={`absolute left-0 h-full flex items-center justify-center pl-3 transition-opacity duration-300 ${expanded ? 'opacity-100' : 'opacity-0'}`}>
+                 <Search className="w-4 h-4 text-white/60" />
+             </div>
+
+             <input 
+                ref={inputRef}
+                className={`w-full h-full bg-transparent border-none outline-none text-white text-[13px] pl-10 pr-10 font-sans placeholder:text-white/50 transition-opacity duration-300 ${expanded ? 'opacity-100' : 'opacity-0'}`}
+                placeholder="Search..."
+            />
+             <button 
+                onClick={() => setExpanded(!expanded)} 
+                className="w-10 h-10 flex items-center justify-center text-white shrink-0 absolute right-0 z-10 active:scale-90 transition-transform"
+            >
+                {expanded ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
+            </button>
+        </div>
+    );
+};
+
 const CozySection: React.FC = () => {
     const target = useRef(new Date(Date.now() + 846729000)).current; 
     const time = useAnimatedCountdown(target);
@@ -138,13 +179,13 @@ const CozySection: React.FC = () => {
                 <div className="text-sm font-sans tracking-widest mb-2 font-light opacity-80">
                     {f(time.days)} : {f(time.hours)} : {f(time.minutes)} : {f(time.seconds)}
                 </div>
-                <h2 className="text-3xl font-sans font-bold mb-1 tracking-tight">Get Cozy</h2>
-                <p className="text-xl font-serif italic font-light opacity-90 leading-tight mb-5">
-                    We think you’ll like our<br/>new après-ski style.
+                <h2 className="text-[28px] font-sans font-bold mb-1 tracking-[-0.025em] leading-[1.1]">Get Cozy</h2>
+                <p className="text-[28px] font-serif italic font-light opacity-90 leading-[1.1] mb-5">
+                    We think you’ll<br/>like our new<br/>après-ski style.
                 </p>
-                <div className="flex justify-end">
-                    <button className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 active:bg-white/30 transition-colors">
-                        <ArrowRight className="w-4 h-4 text-white" strokeWidth={1} />
+                <div className="mt-6">
+                    <button className="w-full py-4 bg-white/10 backdrop-blur-md text-white rounded-full font-bold uppercase tracking-normal text-[10px] border border-white/20 shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:bg-white/20 font-sans">
+                        Discover the New Collection
                     </button>
                 </div>
             </div>
@@ -157,6 +198,9 @@ const NewBalanceSection: React.FC = () => {
     const time = useAnimatedCountdown(target);
     const [swiped, setSwiped] = useState(false);
     
+    const sectionRef = useRef<HTMLElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
     const swipeBtnRef = useRef<HTMLDivElement>(null);
     const swipeKnobRef = useRef<HTMLDivElement>(null);
     const swipeTextRef = useRef<HTMLDivElement>(null);
@@ -164,36 +208,72 @@ const NewBalanceSection: React.FC = () => {
     const initialContentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        let draggables: Draggable[] = [];
-        if (swipeKnobRef.current && swipeBtnRef.current && !swiped) {
-            const maxX = swipeBtnRef.current.clientWidth - swipeKnobRef.current.clientWidth - 6; 
-            draggables = Draggable.create(swipeKnobRef.current, {
-                type: "x",
-                bounds: swipeBtnRef.current,
-                inertia: true,
-                edgeResistance: 0.9,
-                onDrag: function() {
-                    // @ts-ignore
-                    const self = this;
-                    const progress = self.x / maxX;
-                    if (swipeTextRef.current) gsap.to(swipeTextRef.current, { opacity: 1 - progress, duration: 0.1 });
-                    if (self.x > maxX * 0.95) {
-                        gsap.to(self.target, { x: maxX, duration: 0.1 });
-                        self.endDrag();
-                        setSwiped(true);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && videoRef.current) {
+                        videoRef.current.play().catch(e => console.log("Autoplay prevented", e));
+                        observer.unobserve(entry.target);
                     }
-                },
-                onDragEnd: function() {
-                    // @ts-ignore
-                    const self = this;
-                    if (self.x < maxX * 0.95) {
-                        gsap.to(self.target, { x: 0, duration: 0.5, ease: "power3.out" });
-                        if (swipeTextRef.current) gsap.to(swipeTextRef.current, { opacity: 1, duration: 0.5 });
-                    }
-                }
-            });
+                });
+            },
+            { threshold: 0.4 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
         }
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        let draggables: Draggable[] = [];
+        
+        // Wait for layout to be stable before initializing draggable
+        const initDraggable = setTimeout(() => {
+            if (swipeKnobRef.current && swipeBtnRef.current && !swiped) {
+                // FORCE RESET POSITION on init to prevent "jumping" bug
+                gsap.set(swipeKnobRef.current, { x: 0 });
+
+                const containerWidth = swipeBtnRef.current.offsetWidth;
+                const knobWidth = swipeKnobRef.current.offsetWidth;
+                const maxX = containerWidth - knobWidth - 8; // 8px for padding margin (left 4px + right 4px)
+
+                draggables = Draggable.create(swipeKnobRef.current, {
+                    type: "x",
+                    bounds: swipeBtnRef.current,
+                    inertia: true,
+                    edgeResistance: 0.8,
+                    dragClickables: true,
+                    // Use the knob itself as trigger but ensure bounds are respected
+                    trigger: swipeKnobRef.current, 
+                    onDrag: function() {
+                        // @ts-ignore
+                        const self = this;
+                        const progress = self.x / maxX;
+                        if (swipeTextRef.current) gsap.to(swipeTextRef.current, { opacity: 1 - progress * 1.5, duration: 0.1 });
+                        
+                        if (self.x > maxX * 0.95) {
+                            gsap.to(self.target, { x: maxX, duration: 0.1 });
+                            self.endDrag();
+                            setSwiped(true);
+                        }
+                    },
+                    onDragEnd: function() {
+                        // @ts-ignore
+                        const self = this;
+                        if (self.x < maxX * 0.95) {
+                            gsap.to(self.target, { x: 0, duration: 0.5, ease: "power3.out" });
+                            if (swipeTextRef.current) gsap.to(swipeTextRef.current, { opacity: 1, duration: 0.5 });
+                        }
+                    }
+                });
+            }
+        }, 100);
+
         return () => {
+            clearTimeout(initDraggable);
             if(draggables) draggables.forEach(d => d.kill());
         }
     }, [swiped]);
@@ -202,28 +282,34 @@ const NewBalanceSection: React.FC = () => {
         if (swiped) {
             const tl = gsap.timeline();
             tl.to(initialContentRef.current, { opacity: 0, y: -30, duration: 0.6, ease: "power3.inOut" });
-            tl.fromTo(revealRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, "-=0.2");
+            tl.fromTo(revealRef.current, { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.2)" }, "-=0.2");
         }
     }, [swiped]);
 
     return (
-        <section className="bg-black h-[85vh] w-full relative overflow-hidden font-sans border-t border-white/10 animate-on-scroll">
-            <img src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/newbalance.jpg" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+        <section ref={sectionRef} className="bg-black h-[85vh] w-full relative overflow-hidden font-sans border-t border-white/10 animate-on-scroll">
+            <video 
+                ref={videoRef}
+                muted 
+                playsInline 
+                className="absolute inset-0 w-full h-full object-cover opacity-80"
+                src="https://raw.githubusercontent.com/marcelorm81/LP_assets/e8f8824fd2ef1a691672740c117cd943fb680f31/newbalancereveal.mp4"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
             
             {/* Exclusive Release - Center Top Absolute */}
             <div className="absolute top-6 left-0 right-0 z-20 text-center">
-                <div className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#B08D57] font-sans">Exclusive Release</div>
+                <div className="text-[12px] font-bold uppercase text-[#B08D57] font-sans tracking-normal">Exclusive Release</div>
             </div>
 
             <div ref={initialContentRef} className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                 {/* Title Fixed Top-ish */}
                 <div className="absolute top-16 text-center">
-                    <h2 className="text-3xl font-bold text-white leading-none font-sans mb-1">New Balance x</h2>
-                    <h2 className="text-3xl font-light text-white font-sans italic">Loro Piana</h2>
+                    <h2 className="text-[28px] font-bold text-white leading-[1.0] font-sans mb-1">New Balance x</h2>
+                    <h2 className="text-[28px] font-light text-white font-serif italic leading-normal">Loro Piana</h2>
                 </div>
 
-                {/* Countdown Center - Moved down significantly to approx 180px from top */}
+                {/* Countdown Center */}
                 <div className="text-center mt-[180px]">
                     <div className="text-2xl font-sans font-light text-white tracking-widest opacity-90">
                         {f(time.hours)} : {f(time.minutes)} : {f(time.seconds)}
@@ -232,39 +318,42 @@ const NewBalanceSection: React.FC = () => {
                 
                 {/* Swipe Button Container Center Bottom */}
                 <div className="absolute bottom-10 left-0 right-0 flex flex-col items-center gap-2 w-full pointer-events-auto">
+                    {/* H-14 is 56px height. To have a circular knob inside with padding, knob must be square. */}
                     <div ref={swipeBtnRef} className="w-[85%] max-w-[280px] h-14 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 overflow-hidden relative shadow-2xl">
-                        {/* Added pl-12 to center the text relative to the remaining space after the knob */}
-                        <div ref={swipeTextRef} className="absolute inset-0 flex items-center justify-center text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 pointer-events-none pl-12">
+                        <div ref={swipeTextRef} className="absolute inset-0 flex items-center justify-center text-[10px] font-bold uppercase text-white/70 pointer-events-none pl-12">
                              Swipe to Unlock
                         </div>
-                        {/* Added touch-action: none for better mobile drag support */}
-                        <div ref={swipeKnobRef} style={{ touchAction: 'none' }} className="absolute left-1 top-1 bottom-1 w-12 bg-white rounded-full flex items-center justify-center text-black shadow-lg cursor-grab active:cursor-grabbing z-20">
-                           <ArrowRight className="w-4 h-4" strokeWidth={2} />
+                        {/* Knob: h-14 parent (56px) - 2*top/bottom(4px) = 48px height. width w-12 is 48px. 
+                            Strictly square to ensure perfect circle. */}
+                        <div 
+                            ref={swipeKnobRef} 
+                            style={{ touchAction: 'none' }} 
+                            className="absolute left-1 top-1 bottom-1 w-12 bg-white rounded-full flex items-center justify-center text-black shadow-lg cursor-grab active:cursor-grabbing z-20"
+                        >
+                           <ArrowRight className="w-5 h-5 pointer-events-none" strokeWidth={2} />
                         </div>
                     </div>
                     {/* "4 pieces left" below the swipe */}
                     <div className="w-[70%] max-w-[280px] text-center">
-                        <span className="text-[9px] uppercase tracking-[0.2em] text-[#B08D57] font-bold">4 pieces left</span>
+                        <span className="text-[9px] text-[#B08D57] font-bold uppercase">4 pieces left</span>
                     </div>
                 </div>
             </div>
 
-            <div ref={revealRef} className="absolute bottom-[15px] left-0 right-0 z-30 p-6 opacity-0 pointer-events-none">
-                 <div className="bg-black/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-2xl">
-                    <div className="flex justify-between items-end mb-5">
-                        <div className="space-y-1">
-                            <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B08D57] font-sans">Collection 2025</div>
-                            <h2 className="text-xl font-medium text-white font-sans leading-tight">990v6 Loro Piana</h2>
-                            <div className="text-[10px] text-white/60 font-sans">Muted Grey / Cashmere / Suede</div>
-                        </div>
-                        <div className="text-right">
-                             <div className="text-xl font-normal text-white font-sans">€1,200</div>
-                        </div>
-                    </div>
-                    <button className="w-full bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] font-sans py-4 rounded-full active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2 hover:bg-[#F5F2ED] pointer-events-auto">
-                        <ShoppingBag className="w-3.5 h-3.5" strokeWidth={2} /> Purchase Pair
-                    </button>
-                </div>
+            <div ref={revealRef} className="absolute bottom-[15px] left-0 right-0 z-30 px-8 pb-8 opacity-0 pointer-events-none flex flex-col items-center justify-end">
+                 {/* Simplified Layout without background container */}
+                 <div className="text-center space-y-1 mb-6 pointer-events-auto">
+                    <div className="text-[12px] font-sans font-normal tracking-normal text-white">NBV6 LoroPiana</div>
+                    <div className="text-4xl font-serif italic text-white font-light">€1,200</div>
+                 </div>
+                 
+                 <button className="w-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-[11px] font-bold uppercase tracking-widest font-sans py-4 rounded-full pointer-events-auto active:scale-[0.98] transition-all hover:bg-white/20 shadow-lg">
+                    Purchase Pair
+                 </button>
+                 
+                 <div className="mt-4 text-[9px] uppercase tracking-widest text-[#B08D57] font-bold font-sans pointer-events-auto">
+                    4 pairs left
+                 </div>
             </div>
         </section>
     );
@@ -370,8 +459,15 @@ export const LoginScreen: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
 export const DropsScreen: React.FC<{ state: State; navigate: any }> = ({ state, navigate }) => {
   return (
     <div className="animate-luxury-fade bg-[#1A1A1A] flex flex-col min-h-[100dvh] font-sans text-white pb-28 relative">
-        <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-safe py-6 pointer-events-none">
-            <div className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-80 font-sans text-white drop-shadow-md">Exclusive Pieces</div>
+        {/* Header - No Close Button, Centered Text, Updated Typography, Search Pill */}
+        <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-safe py-6 pointer-events-none flex justify-center items-center">
+            {/* Title */}
+            <div className="text-[13px] font-bold tracking-normal uppercase opacity-80 font-sans text-white drop-shadow-md pointer-events-auto">Exclusive Pieces</div>
+            
+            {/* Search Pill Right */}
+            <div className="absolute right-6 pointer-events-auto">
+                <SearchPill />
+            </div>
         </div>
         <CozySection />
         <NewBalanceSection />
@@ -408,8 +504,8 @@ export const HomeScreen: React.FC<{ state: State; navigate: (s: ScreenType, p?: 
     <div className="animate-luxury-fade bg-[#1A1A1A] flex flex-col min-h-[100dvh] font-sans text-white">
       <section className="lp-gradient-bg px-5 pt-safe pb-8 rounded-b-[40px] shadow-2xl relative z-20 space-y-6 animate-on-scroll">
          <div className="pt-4 pb-2 px-1">
-             <h1 className="text-3xl font-sans font-bold text-white/90 tracking-tight">Good Morning,</h1>
-             <h1 className="text-4xl font-serif italic font-light text-white">Andrea</h1>
+             <h1 className="text-[28px] font-sans font-bold text-white/90 tracking-[-0.025em] leading-[1.1]">Good Morning,</h1>
+             <h1 className="text-[28px] font-serif italic font-light text-white leading-[1.1]">Andrea</h1>
          </div>
          <div onClick={() => navigate('store-key')} className="w-full aspect-[2.1] rounded-xl relative overflow-hidden shadow-lg active:scale-[0.99] transition-transform">
             <div className="absolute inset-0 bg-[#A64B3E]" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/leather.png")', backgroundBlendMode: 'multiply' }} />
@@ -461,7 +557,11 @@ export const HomeScreen: React.FC<{ state: State; navigate: (s: ScreenType, p?: 
       
       <section className="bg-[#0B121E] pt-12 pb-10 px-6 space-y-4 relative overflow-hidden animate-on-scroll">
          <div className="space-y-0.5 relative z-10">
-            <h2 className="text-2xl font-sans font-bold leading-tight text-white tracking-tight">Set foot aboard<br/>My Song, at the<br/><span className="font-serif italic font-light">next Loro Piana Giraglia</span></h2>
+            <h2 className="text-[28px] font-sans font-bold leading-[1.1] text-white tracking-[-0.025em]">
+              Set Foot<br/>
+              aboard My Song,<br/>
+              <span className="font-serif italic font-light">at Loro Piana<br/>Giraglia</span>
+            </h2>
          </div>
          <div className="aspect-[4/5] w-full relative rounded-lg overflow-hidden shadow-2xl">
             <video autoPlay loop muted playsInline className="w-full h-full object-cover"><source src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/loronew.mp4" type="video/mp4" /></video>

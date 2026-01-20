@@ -25,7 +25,7 @@ const WardrobeDeck: React.FC<{
     useEffect(() => {
         if (!containerRef.current || !dragProxy.current) return;
 
-        const spacing = 230; 
+        const spacing = 280; // Increased spacing for larger cards
         const maxIndex = wardrobes.length - 1;
 
         // Visual update function shared between Drag and Tween
@@ -38,6 +38,7 @@ const WardrobeDeck: React.FC<{
 
                 // Calculate relative position (0 = center/active, 1 = right, -1 = left)
                 const relProgress = i - rawProgress;
+                const relProgressClamped = Math.min(Math.max(relProgress, -2), 2); // Clamp for smoother falloff
                 const absProgress = Math.abs(relProgress);
                 
                 // 3D Transforms
@@ -46,8 +47,8 @@ const WardrobeDeck: React.FC<{
                 const zIndex = 100 - Math.round(absProgress * 10);
                 
                 let xPos = relProgress * spacing; 
-                const rotateY = -relProgress * 25; 
-                const zPos = -absProgress * 150;
+                const rotateY = -relProgressClamped * 15; // Reduced rotation for cleaner look
+                const zPos = -absProgress * 100;
 
                 gsap.set(el, {
                     x: xPos,
@@ -119,7 +120,7 @@ const WardrobeDeck: React.FC<{
     // Handle external updates to activeIndex (e.g., initial load or reset)
     useEffect(() => {
         if (!draggableRef.current || !dragProxy.current) return;
-        const spacing = 230;
+        const spacing = 280;
         const currentX = gsap.getProperty(dragProxy.current, "x") as number;
         const targetX = -activeIndex * spacing;
         
@@ -136,13 +137,14 @@ const WardrobeDeck: React.FC<{
                      cardsRef.current.forEach((el, i) => {
                         if (!el) return;
                         const relProgress = i - rawProgress;
+                        const relProgressClamped = Math.min(Math.max(relProgress, -2), 2);
                         const absProgress = Math.abs(relProgress);
                         const scale = gsap.utils.interpolate(1, 0.8, Math.min(absProgress, 1));
                         const opacity = gsap.utils.interpolate(1, 0.6, Math.min(absProgress * 0.8, 1));
                         const zIndex = 100 - Math.round(absProgress * 10);
                         let xPos = relProgress * spacing; 
-                        const rotateY = -relProgress * 25; 
-                        const zPos = -absProgress * 150;
+                        const rotateY = -relProgressClamped * 15; 
+                        const zPos = -absProgress * 100;
                         gsap.set(el, { x: xPos, z: zPos, rotateY: rotateY, scale: scale, opacity: opacity, zIndex: zIndex, display: Math.abs(relProgress) > 3 ? 'none' : 'block' });
                      });
                 }
@@ -151,7 +153,7 @@ const WardrobeDeck: React.FC<{
     }, [activeIndex]);
 
     return (
-        <div className="relative w-full h-[320px] flex items-center justify-center overflow-visible touch-action-pan-y group">
+        <div className="relative w-full h-[400px] flex items-center justify-center overflow-visible touch-action-pan-y group">
             {/* Invisible Proxy for Drag Logic */}
             <div ref={dragProxy} className="absolute top-0 left-0 w-1 h-1 opacity-0 pointer-events-none" />
 
@@ -164,7 +166,7 @@ const WardrobeDeck: React.FC<{
                     <div 
                         key={w.id}
                         ref={el => { cardsRef.current[i] = el; }}
-                        className="absolute w-[220px] h-[300px] rounded-[24px] overflow-hidden shadow-2xl bg-[#1A1A1A] will-change-transform border border-white/10"
+                        className="absolute w-[260px] h-[360px] rounded-[24px] overflow-hidden shadow-2xl bg-[#1A1A1A] will-change-transform border border-white/10"
                         onClick={() => {
                             if (i === activeIndex) navigate('wardrobe-detail', { selectedWardrobeId: w.id });
                             else onChange(i);
@@ -182,11 +184,11 @@ const WardrobeDeck: React.FC<{
                                  {/* Title Split Logic */}
                                  {w.name.includes(' ') ? (
                                     <>
-                                        <h3 className="text-xl font-bold font-sans text-white leading-none drop-shadow-md">{w.name.split(' ')[0]}</h3>
-                                        <h3 className="text-xl font-serif italic text-white/90 leading-none">{w.name.split(' ').slice(1).join(' ')}</h3>
+                                        <h3 className="text-[28px] font-bold font-sans text-white leading-[1.0] drop-shadow-md">{w.name.split(' ')[0]}</h3>
+                                        <h3 className="text-[28px] font-serif italic text-white/90 leading-[1.0]">{w.name.split(' ').slice(1).join(' ')}</h3>
                                     </>
                                  ) : (
-                                    <h3 className="text-xl font-serif italic text-white/90 leading-none">{w.name}</h3>
+                                    <h3 className="text-[28px] font-serif italic text-white/90 leading-[1.0]">{w.name}</h3>
                                  )}
                              </div>
                              <div className="w-7 h-7 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
@@ -206,9 +208,8 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
   const [activeIndex, setActiveIndex] = useState(0);
   const activeWardrobe = state.wardrobes[activeIndex] || state.wardrobes[0];
   
-  // Get items for preview, pad with placeholders if needed
-  const previewItems = activeWardrobe.items.slice(0, 3);
-  const placeholderCount = Math.max(0, 3 - previewItems.length);
+  // Total 4 slots in the row
+  const totalSlots = 4;
 
   return (
     <div className="animate-luxury-fade bg-[#151515] min-h-screen flex flex-col font-sans">
@@ -220,7 +221,9 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
 
           {/* Header - Made Transparent to blend with hero */}
           <div className="flex items-center justify-between px-6 py-5 pt-safe sticky top-0 z-40">
-             <div className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-90 font-sans text-white">Your Wardrobe</div>
+             <div className="text-[20px] opacity-90 text-white">
+                <span className="font-sans font-bold">Your</span> <span className="font-serif italic">Wardrobe</span>
+             </div>
              <div className="flex gap-3">
                  <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white active:bg-white/20 transition-colors">
                      <Search className="w-4 h-4 opacity-70" strokeWidth={1.5} />
@@ -231,7 +234,7 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
              </div>
           </div>
 
-          <div className="mt-4 relative">
+          <div className="mt-2 relative">
              <WardrobeDeck 
                 wardrobes={state.wardrobes} 
                 activeIndex={activeIndex} 
@@ -248,22 +251,47 @@ export const WardrobeScreen: React.FC<{ state: State; navigate: (s: any, p?: any
              </button>
           </div>
           
-          {/* Thumbnails Row - Aligned to match the width of the active card (220px) */}
+          {/* Thumbnails Row - Aligned to match the width of the active card (260px) */}
           <div className="w-full flex justify-center -mt-6 px-4 relative z-20">
-              <div className="w-[220px] grid grid-cols-3 gap-2">
-                  {previewItems.map((item, i) => (
-                      <div 
-                        key={item.id} 
-                        onClick={() => navigate('product-detail', { selectedProductId: item.id })}
-                        className="aspect-[4/5] bg-[#F4F0EA] rounded-lg overflow-hidden shadow-lg animate-luxury-fade group border border-white/10 cursor-pointer relative flex items-center justify-center active:scale-95 transition-transform"
-                      >
-                          {/* Normal image rendering as requested, keeping breath space */}
-                          <img src={item.image} className="w-[85%] h-[85%] object-contain" />
-                      </div>
-                  ))}
-                  {Array.from({ length: placeholderCount }).map((_, i) => (
-                      <div key={`ph-${i}`} className="aspect-[4/5] bg-[#252525]/50 rounded-lg border border-white/5" />
-                  ))}
+              <div className="w-[260px] grid grid-cols-4 gap-1.5">
+                  {Array.from({ length: totalSlots }).map((_, i) => {
+                      const item = activeWardrobe.items[i];
+                      const isSpecial = i === 3; // 4th card (index 3) is special
+
+                      // 1. Placeholder Case: No item exists for this slot
+                      if (!item) {
+                          return <div key={`ph-${i}`} className="aspect-[4/5] bg-[#252525]/50 rounded-lg border border-white/5" />;
+                      }
+
+                      // 2. Special Card Case (4th slot)
+                      if (isSpecial) {
+                          return (
+                              <div 
+                                key={item.id}
+                                onClick={() => navigate('wardrobe-detail', { selectedWardrobeId: activeWardrobe.id })}
+                                className="aspect-[4/5] bg-[#252525] rounded-lg overflow-hidden shadow-lg border border-white/10 cursor-pointer relative flex items-center justify-center active:scale-95 transition-transform group"
+                              >
+                                  {/* Dimmed/Darkened Image */}
+                                  <img src={item.image} className="w-[85%] h-[85%] object-contain opacity-30 grayscale" />
+                                  {/* Plus Sign Overlay */}
+                                  <div className="absolute inset-0 flex items-center justify-center">
+                                      <Plus className="w-5 h-5 text-white opacity-90" strokeWidth={1.5} />
+                                  </div>
+                              </div>
+                          );
+                      }
+
+                      // 3. Standard Preview Card Case
+                      return (
+                          <div 
+                            key={item.id} 
+                            onClick={() => navigate('product-detail', { selectedProductId: item.id })}
+                            className="aspect-[4/5] bg-[#F4F0EA] rounded-lg overflow-hidden shadow-lg animate-luxury-fade group border border-white/10 cursor-pointer relative flex items-center justify-center active:scale-95 transition-transform"
+                          >
+                              <img src={item.image} className="w-[85%] h-[85%] object-contain" />
+                          </div>
+                      );
+                  })}
               </div>
           </div>
       </div>
@@ -485,7 +513,7 @@ export const WardrobeDetailScreen: React.FC<{ state: State; navigate: any; goBac
   const wardrobe = state.wardrobes.find(w => w.id === state.selectedWardrobeId) || state.wardrobes[0];
   const [suggestionState, setSuggestionState] = useState<'visible' | 'added' | 'dismissed'>('visible');
 
-  // Hardcoded suggestion item
+  // Hardcoded suggestion item with specific image
   const suggestionItem = {
       id: 'suggestion-1',
       name: 'Cashmere Overshirt',

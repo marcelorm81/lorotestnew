@@ -10,6 +10,7 @@ export interface WardrobeItem {
   image: string;
   category: string;
   note?: string;
+  isSuggestion?: boolean;
 }
 
 export interface Wardrobe {
