@@ -7,9 +7,9 @@ import { State, ScreenType } from './types';
 import { TabNavigation, ChatBottomSheet, AdaptiveStage, LoadingScreen } from './components';
 
 // Import screens from their new modular files
-import { LoginScreen, HomeScreen, WelcomeScreen, DropsScreen, AccountScreen } from './screens_home';
-import { WardrobeScreen, WardrobeDetailScreen, CreateWardrobeScreen, AddItemSelectionScreen, AddItemMethodScreen, ScanItemScreen, WardrobeListingScreen } from './screens_wardrobe';
-import { ProductDetailScreen, MTOScreen, StoreKeyScreen, EventDetailScreen, EventsScreen, PersonalPreferencesScreen, MySizeScreen, PlanVisitScreen } from './screens_details';
+import { LoginScreen, HomeScreen, WelcomeScreen, DropsScreen, AccountScreen, CollectionLandingScreen, CapsuleCarouselScreen, CapsuleConfirmScreen } from './screens_home';
+import { WardrobeScreen, WardrobeDetailScreen, CreateWardrobeScreen, AddItemSelectionScreen, AddItemMethodScreen, ScanItemScreen, WardrobeListingScreen, OrderHistoryScreen } from './screens_wardrobe';
+import { ProductDetailScreen, MTOScreen, MTODetailScreen, StoreKeyScreen, EventDetailScreen, EventsScreen, PersonalPreferencesScreen, MySizeScreen, PlanVisitScreen } from './screens_details';
 
 const App: React.FC = () => {
   const [state, setState] = useState<State>(INITIAL_STATE);
@@ -122,16 +122,21 @@ const App: React.FC = () => {
         }} />}
         {state.activeScreen === 'product-detail' && <ProductDetailScreen state={state} goBack={goBack} toggleChat={toggleChat} />}
         {state.activeScreen === 'mto' && <MTOScreen state={state} goBack={goBack} navigate={navigate} toggleChat={toggleChat} />}
+        {state.activeScreen === 'mto-detail' && <MTODetailScreen state={state} goBack={goBack} navigate={navigate} toggleChat={toggleChat} />}
         {state.activeScreen === 'store-key' && <StoreKeyScreen goBack={goBack} />}
         {state.activeScreen === 'events' && <EventsScreen state={state} navigate={navigate} goBack={goBack} />}
         {state.activeScreen === 'event-detail' && <EventDetailScreen state={state} goBack={goBack} toggleChat={toggleChat} navigate={navigate} />}
         {state.activeScreen === 'drops' && <DropsScreen state={state} navigate={navigate} />}
+        {state.activeScreen === 'collection-landing' && <CollectionLandingScreen navigate={navigate} />}
+        {state.activeScreen === 'capsule-carousel' && <CapsuleCarouselScreen navigate={navigate} />}
+        {state.activeScreen === 'capsule-confirm' && <CapsuleConfirmScreen state={state} navigate={navigate} />}
         {state.activeScreen === 'account' && <AccountScreen state={state} navigate={navigate} />}
         {state.activeScreen === 'personal-preferences' && <PersonalPreferencesScreen state={state} goBack={goBack} navigate={navigate} />}
         {state.activeScreen === 'my-size' && <MySizeScreen goBack={goBack} />}
         {state.activeScreen === 'plan-visit' && <PlanVisitScreen goBack={goBack} navigate={navigate} />}
+        {state.activeScreen === 'order-history' && <OrderHistoryScreen state={state} goBack={goBack} navigate={navigate} />}
         
-        {!['welcome', 'login', 'home', 'wardrobe', 'wardrobe-detail', 'create-wardrobe', 'wardrobe-listing', 'add-item-selection', 'product-detail', 'mto', 'store-key', 'events', 'event-detail', 'add-item-method', 'scan-item', 'drops', 'account', 'personal-preferences', 'my-size', 'plan-visit'].includes(state.activeScreen) && (
+        {!['welcome', 'login', 'home', 'wardrobe', 'wardrobe-detail', 'create-wardrobe', 'wardrobe-listing', 'add-item-selection', 'product-detail', 'mto', 'mto-detail', 'store-key', 'events', 'event-detail', 'add-item-method', 'scan-item', 'drops', 'account', 'personal-preferences', 'my-size', 'plan-visit', 'order-history', 'collection-landing', 'capsule-carousel', 'capsule-confirm'].includes(state.activeScreen) && (
           <div className="flex flex-col items-center justify-center min-h-screen p-10 text-center space-y-6 animate-luxury-fade">
             <h2 className="text-3xl font-light uppercase tracking-widest">{state.activeScreen.replace('-', ' ')}</h2>
             <p className="opacity-40 italic font-light tracking-wide">This private corridor is being prepared for your arrival.</p>

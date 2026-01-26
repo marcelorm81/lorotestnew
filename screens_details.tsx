@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Camera, Plus, Search, Heart, Clock, ArrowRight, Zap, Briefcase, MapPin, Bell, UserPlus, QrCode, CheckCircle2, ChevronRight, ChevronLeft, MoreHorizontal, X, MessageSquare, Edit2, ShieldCheck, Sparkles, Scan, Layout, Check, Calendar, Hammer, Wrench, Scissors, History, Eye, Smartphone, ShoppingBag, Palette, Ruler } from 'lucide-react';
+import { Camera, Plus, Search, Heart, Clock, ArrowRight, Zap, Briefcase, MapPin, Bell, UserPlus, QrCode, CheckCircle2, ChevronRight, ChevronLeft, MoreHorizontal, X, MessageSquare, Edit2, ShieldCheck, Sparkles, Scan, Layout, Check, Calendar, Hammer, Wrench, Scissors, History, Eye, Smartphone, ShoppingBag, Palette, Ruler, PenTool } from 'lucide-react';
 import { Header } from './components';
 import { State, ScreenType, Wardrobe, WardrobeItem } from './types';
-import { LORO_PRODUCTS } from './data';
+import { LORO_PRODUCTS, INITIAL_STATE } from './data';
 import { gsap } from 'gsap';
 import { StackedCards } from './screens_home';
 
@@ -75,13 +75,97 @@ export const ProductDetailScreen: React.FC<{ state: State; goBack: any; toggleCh
   );
 };
 
+// --- New MTO Landing Page ---
 export const MTOScreen: React.FC<{ state: State; goBack: () => void; navigate: any; toggleChat: any }> = ({ state, goBack, navigate, toggleChat }) => {
+    return (
+        <div className="animate-luxury-fade bg-[#F4F0EA] min-h-screen flex flex-col pb-28 relative overflow-x-hidden">
+            {/* Header: Absolute, Transparent, Overlay */}
+            <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-safe py-6 flex justify-between items-center pointer-events-none">
+                <div />
+                <div className="text-[13px] font-bold tracking-normal uppercase opacity-80 font-sans text-white drop-shadow-md">Personalization</div>
+                <button onClick={goBack} className="w-8 h-8 bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform pointer-events-auto border border-white/10"><X className="w-4 h-4" /></button>
+            </div>
+
+            {/* Hero Section - Full Bleed */}
+            <div className="relative h-[80vh] w-full">
+                <img src="https://raw.githubusercontent.com/marcelorm81/LP_assets/f055abedde0b673bf1958ef79d8bdf6054d01611/craftmanship3.jpg" className="absolute inset-0 w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                
+                {/* Hero Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-8 pb-12 text-white">
+                    <div className="mb-4 flex items-center gap-3">
+                        <span className="text-[11px] font-sans font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">Exclusive Service</span>
+                    </div>
+                    
+                    <div className="mb-2">
+                        <h1 className="text-3xl font-serif italic font-light leading-tight">My Loro Piana</h1>
+                        <h1 className="text-3xl font-sans font-bold leading-tight">Bespoke Offer</h1>
+                    </div>
+                    <p className="text-[10px] font-sans text-white/80 leading-relaxed uppercase tracking-wide mt-4">The pinnacle of sartorial excellence</p>
+                </div>
+            </div>
+
+            {/* Actions Menu */}
+            <div className="px-6 space-y-4 flex-1 pt-8 bg-[#F4F0EA] relative z-10 -mt-4 rounded-t-3xl">
+                {/* Action 1: Configure */}
+                <button onClick={() => {/* Placeholder for 3D Config */}} className="w-full bg-[#A64B3E] text-white p-6 rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-between group">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                            <PenTool className="w-5 h-5 text-white" strokeWidth={1.5} />
+                        </div>
+                        <div className="text-left">
+                            <div className="text-sm font-sans font-bold">Configure My Garment</div>
+                            <div className="text-[9px] uppercase tracking-widest opacity-80 font-sans mt-1">Start a new creation</div>
+                        </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" />
+                </button>
+
+                {/* Action 2: Active Status */}
+                <button onClick={() => navigate('mto-detail')} className="w-full bg-white text-[#1A1A1A] p-6 rounded-2xl shadow-sm border border-[#1A1A1A]/5 active:scale-[0.98] transition-all flex items-center justify-between group">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-[#F4F0EA] flex items-center justify-center">
+                            <Scissors className="w-5 h-5 text-[#1A1A1A]" strokeWidth={1.5} />
+                        </div>
+                        <div className="text-left">
+                            <div className="text-sm font-sans font-bold">My Creations Order Status</div>
+                            <div className="text-[9px] uppercase tracking-widest text-[#B08D57] font-sans mt-1 font-bold">1 Active Order</div>
+                        </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-[#1A1A1A]/30 group-hover:text-[#1A1A1A] transition-colors" />
+                </button>
+
+                {/* Action 3: History */}
+                <button onClick={() => navigate('order-history')} className="w-full bg-white text-[#1A1A1A] p-6 rounded-2xl shadow-sm border border-[#1A1A1A]/5 active:scale-[0.98] transition-all flex items-center justify-between group">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-[#F4F0EA] flex items-center justify-center">
+                            <History className="w-5 h-5 text-[#1A1A1A]" strokeWidth={1.5} />
+                        </div>
+                        <div className="text-left">
+                            <div className="text-sm font-sans font-bold">See all the orders</div>
+                            <div className="text-[9px] uppercase tracking-widest text-[#1A1A1A]/40 font-sans mt-1">Archive</div>
+                        </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-[#1A1A1A]/30 group-hover:text-[#1A1A1A] transition-colors" />
+                </button>
+
+                 <div className="p-6 text-center">
+                     <button onClick={toggleChat} className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A64B3E] underline underline-offset-4 decoration-[#A64B3E]/30">
+                        Contact Specialist
+                     </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const MTODetailScreen: React.FC<{ state: State; goBack: () => void; navigate: any; toggleChat: any }> = ({ state, goBack, navigate, toggleChat }) => {
   const mtoDetails = { title: "Traveller Jacket", purchaseDate: "Purchased 23 June 2022", heroImage: "https://raw.githubusercontent.com/marcelorm81/LP_assets/ab1bc08d9d5af798814ab6f1bd91f7f1c432a15c/MTO.png", stepImage: "https://raw.githubusercontent.com/marcelorm81/LP_assets/71ff099ed2c4ce74c83c5dd5ee00f7842813ee0f/jacket2.jpg", updatesText: `Dear ${state.user.name.split(' ')[0]},\nWe are currently assembling your Traveller Jacket.\nTrack the progress of your garment right here`, specs: ["Fabric selection: Linen & Cotton Blend.", "Colour: Icy Stone (W1BU)."] };
   return (
     <div className="animate-luxury-fade bg-[#F4F0EA] min-h-full flex flex-col pb-10">
       {/* Centered Header matching DropsScreen style */}
       <div className="sticky top-0 left-0 right-0 z-50 px-6 pt-safe py-6 flex justify-center items-center bg-[#F4F0EA]/90 backdrop-blur-md">
-        <div className="text-[13px] font-bold tracking-normal uppercase opacity-80 font-sans text-[#1A1A1A]">Made to Order</div>
+        <div className="text-[13px] font-bold tracking-normal uppercase opacity-80 font-sans text-[#1A1A1A]">Order Tracking</div>
         <div className="absolute right-6">
             <button onClick={goBack} className="w-8 h-8 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white active:scale-90 transition-transform"><X className="w-4 h-4" /></button>
         </div>
@@ -113,8 +197,15 @@ export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }
     const mainEvent = state.events.find(e => e.id === 'giraglia-2025') || state.events[0];
     const otherEvents = state.events.filter(e => e.id !== mainEvent.id);
 
+    const experiences = [
+        { id: 'exp1', title: 'Bitter, Sweet', location: 'at Bob Milano', image: 'https://raw.githubusercontent.com/marcelorm81/LP_assets/a21949bbadb39167a0912d47975f1ff65239fbc9/ticket.jpg' },
+        { id: 'exp2', title: 'Aperitivo', location: 'at Villa d\'Este', image: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=800' },
+        { id: 'exp3', title: 'Private View', location: 'Galleria Borghese', image: 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&q=80&w=800' },
+        { id: 'exp4', title: 'Jazz Night', location: 'Blue Note Milano', image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=800' }
+    ];
+
     return (
-        <div className="bg-[#1A1A1A] min-h-screen pb-28 text-white font-sans animate-luxury-fade overflow-x-hidden relative">
+        <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] font-sans animate-luxury-fade overflow-x-hidden relative">
             
             {/* Header: Absolute, Transparent, No Blur, Overlay on Video */}
             <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-safe py-6 flex justify-center items-center pointer-events-none">
@@ -155,218 +246,7 @@ export const EventsScreen: React.FC<{ state: State; navigate: any; goBack: any }
             </div>
 
             {/* Past Events Section */}
-            <div className="px-6 pb-8 space-y-8 bg-[#1A1A1A] text-white">
-                <div className="space-y-2 pt-8 border-t border-white/10">
-                    <h2 className="text-2xl font-serif text-white">Past Events</h2>
-                    <p className="text-sm font-sans text-white/60 max-w-[250px] leading-relaxed">
-                        Relive the Loro Piana moments you've attended.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    {otherEvents.map(evt => (
-                        <div key={evt.id} className="bg-white/5 p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-white/10 group cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate('event-detail', { selectedEventId: evt.id }); }}>
-                            <div className="flex-1 p-6 flex flex-col justify-center space-y-2 relative">
-                                <div className="text-[9px] text-[#B08D57] font-bold uppercase tracking-widest">{evt.date}</div>
-                                <h3 className="text-lg font-serif italic text-white leading-tight max-w-[120px]">{evt.title}</h3>
-                                <div className="flex items-center gap-1 text-[8px] text-white/40 uppercase tracking-wider group-hover:text-[#B08D57] transition-colors">
-                                    <span>View Gallery</span> <ArrowRight className="w-3 h-3" />
-                                </div>
-                            </div>
-                            <div className="w-[40%] h-full relative">
-                                <img src={evt.image} className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const GALLERY_IMAGES = [
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/even1.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event2.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event3.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event4.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event5.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event6.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event7.avif",
-  "https://raw.githubusercontent.com/marcelorm81/LP_assets/01e89b9bcbf16e10ac5d32eca7e9fb6487796d7e/event8.avif"
-];
-
-export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat: any; navigate: any }> = ({ state, goBack, toggleChat, navigate }) => {
-    const event = state.events.find(e => e.id === state.selectedEventId);
-    const pastEvents = state.events.filter(e => e.type === 'past' && e.id !== state.selectedEventId);
-    
-    if (!event) return null;
-
-    // Check if it's the Giraglia event to apply specific layout, otherwise generic detail or gallery
-    const isGiraglia = event.id === 'giraglia-2025';
-
-    if (!isGiraglia) {
-        
-        let caMessage = null;
-        if (event.id === 'lake-como-2024') {
-            caMessage = (
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#1A1A1A]/5 flex gap-5 mb-8">
-                    <div className="shrink-0">
-                        <img src={state.ca.avatar} className="w-12 h-12 rounded-full object-cover border border-[#1A1A1A]/10" />
-                    </div>
-                    <div className="space-y-2">
-                         <p className="text-sm font-serif italic text-[#1A1A1A] leading-relaxed">
-                            <span className="font-bold font-sans not-italic text-[10px] uppercase tracking-widest text-[#B08D57] block mb-2">Message from Sofia</span>
-                            "Andrea,<br/><br/>
-                            A few memories from Lake Como. It was a beautiful moment to share, I hope these images bring you back there. Feel free to download any of them.<br/><br/>
-                            Sophia"
-                         </p>
-                    </div>
-                </div>
-            );
-        } else if (event.id === 'aspen-winter-2024') {
-            caMessage = (
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-[#1A1A1A]/5 flex gap-5 mb-8">
-                    <div className="shrink-0">
-                        <img src={state.ca.avatar} className="w-12 h-12 rounded-full object-cover border border-[#1A1A1A]/10" />
-                    </div>
-                    <div className="space-y-2">
-                         <p className="text-sm font-serif italic text-[#1A1A1A] leading-relaxed">
-                             <span className="font-bold font-sans not-italic text-[10px] uppercase tracking-widest text-[#B08D57] block mb-2">Message from Sofia</span>
-                            "Andrea,<br/><br/>
-                            Some moments from Aspen I wanted to share with you.<br/>
-                            A very special atmosphere, I hope you enjoy revisiting it.<br/><br/>
-                            Sophia"
-                         </p>
-                    </div>
-                </div>
-            );
-        }
-
-        // Simple Gallery View for Past Events (like Lake Como, Aspen)
-        return (
-             <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] animate-luxury-fade relative">
-                 <div className="h-[50vh] w-full relative">
-                     <img src={event.image} className="w-full h-full object-cover" />
-                     <div className="absolute inset-0 bg-black/20" />
-                     <button onClick={goBack} className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform"><X className="w-5 h-5" /></button>
-                 </div>
-                 <div className="px-6 py-8 -mt-10 relative bg-[#F4F0EA] rounded-t-[32px] space-y-4">
-                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">{event.date}</span>
-                     <h1 className="text-3xl font-serif italic">{event.title}</h1>
-                     <p className="text-sm font-sans text-[#1A1A1A]/70 leading-relaxed">{event.description}</p>
-                     
-                     <div className="pt-6">
-                        
-                        {caMessage}
-
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/40 mb-4">Gallery</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                            {GALLERY_IMAGES.map((src, i) => (
-                                <div key={i} className="aspect-[4/5] rounded-lg overflow-hidden relative group cursor-pointer shadow-sm">
-                                    <img src={src} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                </div>
-                            ))}
-                        </div>
-                     </div>
-                 </div>
-             </div>
-        )
-    }
-
-    return (
-        <div className="bg-[#F4F0EA] min-h-screen pb-28 text-[#1A1A1A] font-sans animate-luxury-fade overflow-x-hidden">
-            
-            {/* Hero Video Section - Full Screen Impact */}
-            <div className="relative h-[90vh] w-full">
-                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-                    <source src="https://raw.githubusercontent.com/marcelorm81/LP_assets/535683b2683745d86037c79c476ef55db071f4eb/loronew.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
-                
-                {/* Close Button */}
-                <button onClick={goBack} className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform z-50">
-                    <X className="w-5 h-5" strokeWidth={1} />
-                </button>
-
-                {/* Hero Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 pb-12 text-white">
-                    <div className="mb-4 flex items-center gap-3">
-                        <span className="text-[11px] font-sans font-medium tracking-wide uppercase bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">09-19 June</span>
-                        <span className="text-[11px] font-sans font-medium tracking-wide opacity-80">5 places left</span>
-                    </div>
-                    
-                    {/* Updated Title Typography */}
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-sans font-bold leading-tight">Set Foot</h1>
-                        <h1 className="text-3xl font-sans font-bold leading-tight">aboard My Song,</h1>
-                        <h2 className="text-3xl font-serif italic font-light leading-tight">at Loro Piana</h2>
-                        <h2 className="text-3xl font-serif italic font-light leading-tight">Giraglia</h2>
-                    </div>
-                    
-                    <div className="mt-8">
-                        <button className="w-full py-5 bg-[#F4F0EA] text-[#1A1A1A] uppercase tracking-[0.2em] text-[10px] font-bold rounded-full active:scale-[0.98] transition-all hover:bg-white shadow-xl">
-                            RSVP
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Editorial Content */}
-            <div className="px-6 py-12 space-y-12 bg-[#F4F0EA]">
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-sans font-bold leading-tight text-[#1A1A1A]">During three days, witness the Grand Finale of an unforgettable sea journey</h2>
-                    <p className="text-sm font-serif text-[#1A1A1A]/70 leading-relaxed">
-                        As a valued guest, you'll have exclusive access to the race, the opportunity to explore the enchanting French Riviera, and the chance to celebrate with champions at the concluding ceremony. This unique adventure combines the thrill of competitive sailing with cultural exploration and convivial celebrations.
-                    </p>
-                </div>
-
-                {/* Agenda / Days Carousel */}
-                <div>
-                     <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-serif italic text-[#1A1A1A]">The Regatta</h3>
-                        <div className="text-[9px] uppercase tracking-widest text-[#1A1A1A]/40 font-bold">Agenda</div>
-                     </div>
-                     
-                    <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6">
-                        {/* Day 1 */}
-                        <div className="min-w-[280px] h-[380px] relative rounded-lg overflow-hidden shrink-0 group shadow-lg">
-                            <img src="https://raw.githubusercontent.com/marcelorm81/LP_assets/582084ffd3e71fcf69dc689d60061f9e587543df/carousel1.jpg" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
-                            <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full">
-                                <div className="text-white text-[10px] font-sans font-bold uppercase tracking-widest">Day 1</div>
-                            </div>
-                            <div className="absolute bottom-6 left-6 right-6">
-                                <div className="text-white text-xl font-serif italic mb-1">The Thrill of the Race</div>
-                                <p className="text-white/70 text-[10px] font-sans leading-relaxed">Experience the start of the race from the exclusive Loro Piana boat.</p>
-                            </div>
-                        </div>
-
-                         {/* Day 2 */}
-                        <div className="min-w-[280px] h-[380px] relative rounded-lg overflow-hidden shrink-0 group shadow-lg">
-                            <img src="https://raw.githubusercontent.com/marcelorm81/LP_assets/582084ffd3e71fcf69dc689d60061f9e587543df/carousel2.jpg" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
-                             <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full">
-                                 <div className="text-white text-[10px] font-sans font-bold uppercase tracking-widest">Day 2</div>
-                            </div>
-                            <div className="absolute bottom-6 left-6 right-6">
-                                <div className="text-white text-xl font-serif italic mb-1">Cultural Immersion</div>
-                                <p className="text-white/70 text-[10px] font-sans leading-relaxed">Private tour of the historic port followed by a sunset gala dinner.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Contact Button */}
-                <div className="pt-4 border-t border-[#1A1A1A]/10">
-                    <button onClick={toggleChat} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
-                        <MessageSquare className="w-4 h-4" /> Contact Client Advisor
-                    </button>
-                </div>
-            </div>
-
-            {/* Past Events Section */}
-            <div className="px-6 pb-8 space-y-8 bg-[#F4F0EA]">
+            <div className="px-6 pb-8 space-y-8 bg-[#F4F0EA] text-[#1A1A1A]">
                 <div className="space-y-2 pt-8 border-t border-[#1A1A1A]/10">
                     <h2 className="text-2xl font-serif text-[#1A1A1A]">Past Events</h2>
                     <p className="text-sm font-sans text-[#1A1A1A]/60 max-w-[250px] leading-relaxed">
@@ -375,8 +255,8 @@ export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat
                 </div>
 
                 <div className="space-y-4">
-                    {pastEvents.map(evt => (
-                        <div key={evt.id} className="bg-white p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-[#1A1A1A]/5 group cursor-pointer" onClick={() => navigate('event-detail', { selectedEventId: evt.id })}>
+                    {otherEvents.map(evt => (
+                        <div key={evt.id} className="bg-white p-0 rounded-2xl overflow-hidden shadow-sm flex h-[140px] border border-[#1A1A1A]/5 group cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate('event-detail', { selectedEventId: evt.id }); }}>
                             <div className="flex-1 p-6 flex flex-col justify-center space-y-2 relative">
                                 <div className="text-[9px] text-[#A64B3E] font-bold uppercase tracking-widest">{evt.date}</div>
                                 <h3 className="text-lg font-serif italic text-[#1A1A1A] leading-tight max-w-[120px]">{evt.title}</h3>
@@ -393,278 +273,362 @@ export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat
                 </div>
             </div>
 
+            {/* Exclusive Access Section (Added) */}
+            <section className="bg-[#F4F0EA] py-14 px-0 relative overflow-hidden animate-on-scroll">
+                <div className="relative z-10 px-8 mb-6 text-center space-y-1">
+                    <h2 className="text-2xl font-serif font-light text-[#1A1A1A]">Exclusive Access</h2>
+                    <p className="text-[9px] font-sans opacity-70 text-[#1A1A1A] max-w-xs mx-auto leading-relaxed">Curated experiences for our most valued clients</p>
+                </div>
+                <div className="relative z-10 w-full flex justify-center pb-4"><StackedCards items={experiences} /></div>
+                <div className="text-center pb-2 relative z-10"><button className="text-[8px] uppercase tracking-[0.2em] border-b border-[#1A1A1A]/30 pb-0.5 font-sans text-[#1A1A1A] hover:border-[#1A1A1A] transition-colors">See All Access</button></div>
+            </section>
         </div>
     );
 };
 
-export const PlanVisitScreen: React.FC<{ goBack: any; navigate: any }> = ({ goBack, navigate }) => {
-    const [selectedDate, setSelectedDate] = useState<number | null>(null);
-    const [selectedTime, setSelectedTime] = useState<string | null>(null);
-    const [selectedReason, setSelectedReason] = useState<string | null>(null);
-    const [submitted, setSubmitted] = useState(false);
-    
-    const dates = [{ d: '26', w: 'Mon' }, { d: '27', w: 'Tue' }, { d: '28', w: 'Wed' }, { d: '29', w: 'Thu' }, { d: '30', w: 'Fri' }, { d: '01', w: 'Sat' }];
-    const times = ['10:00', '11:30', '14:00', '15:30', '17:00'];
-    const reasons = [
-        { id: 'styling', label: 'Styling Appointment' },
-        { id: 'mto', label: 'MTO Consultation' },
-        { id: 'pickup', label: 'Collection Pick-up' }
-    ];
+// --- Store Access Card Component ---
 
-    if (submitted) {
-        return (
-            <div className="bg-[#F4F0EA] min-h-screen flex flex-col items-center justify-center p-8 text-center space-y-6 animate-luxury-fade">
-                <div className="w-20 h-20 bg-[#A64B3E] rounded-full flex items-center justify-center text-white shadow-xl mb-4"><Check className="w-10 h-10" /></div>
-                <div className="space-y-2"><h2 className="text-3xl font-serif text-[#1A1A1A]">Request Sent</h2><p className="text-sm font-sans text-[#1A1A1A]/60 leading-relaxed max-w-[250px] mx-auto">Sofia will confirm your appointment shortly. You will receive a notification.</p></div>
-                <button onClick={goBack} className="mt-8 px-10 py-4 bg-white border border-[#1A1A1A]/10 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-sm active:scale-[0.98] transition-all text-[#1A1A1A]">Return</button>
-            </div>
-        );
-    }
+const StoreAccessCard: React.FC = () => {
+    const [flipped, setFlipped] = useState(false);
+    const [color, setColor] = useState<'burgundy' | 'cream' | 'black' | 'purple'>('burgundy');
+
+    const cardRef = useRef<HTMLDivElement>(null);
+    const shineRef = useRef<HTMLDivElement>(null);
+    const foilRef = useRef<HTMLDivElement>(null);
+    const qrFoilRef = useRef<HTMLDivElement>(null);
+
+    const colors = {
+        burgundy: { bg: 'bg-[#9D5248]', text: 'text-[#C5A572]' }, // Gold text
+        cream: { bg: 'bg-[#F0EBE0]', text: 'text-[#1A1A1A]' }, // Dark text for contrast
+        black: { bg: 'bg-[#151515]', text: 'text-[#C5A572]' },
+        purple: { bg: 'bg-[#3E2738]', text: 'text-[#C5A572]' }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
+        if (!cardRef.current) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        
+        // Handle touch or mouse
+        const clientX = 'touches' in e ? (e as React.TouchEvent).touches[0].clientX : (e as React.MouseEvent).clientX;
+        const clientY = 'touches' in e ? (e as React.TouchEvent).touches[0].clientY : (e as React.MouseEvent).clientY;
+
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        const w = rect.width;
+        const h = rect.height;
+        const cx = w / 2;
+        const cy = h / 2;
+
+        // Rotation (Tilt)
+        const rotateX = ((y - cy) / cy) * -15; 
+        const rotateY = ((x - cx) / cx) * 15;
+
+        // Sheen Movement (Opposite to mouse)
+        const shineX = ((x - cx) / cx) * -100;
+        const shineY = ((y - cy) / cy) * -100;
+
+        // Foil Gradient Movement (Parallax)
+        const foilX = ((x - cx) / cx) * 40;
+        const foilY = ((y - cy) / cy) * 40;
+
+        gsap.to(cardRef.current, {
+            rotateX: rotateX,
+            rotateY: flipped ? 180 + rotateY : rotateY,
+            duration: 0.5,
+            ease: 'power2.out',
+            transformPerspective: 1200,
+            transformStyle: "preserve-3d"
+        });
+
+        if (shineRef.current) {
+             gsap.to(shineRef.current, {
+                x: shineX,
+                y: shineY,
+                opacity: 0.6,
+                duration: 0.3
+            });
+        }
+
+        if (foilRef.current) gsap.to(foilRef.current, { x: foilX, y: foilY, duration: 0.5 });
+        if (qrFoilRef.current) gsap.to(qrFoilRef.current, { x: foilX, y: foilY, duration: 0.5 });
+    };
+
+    const handleMouseLeave = () => {
+        if (!cardRef.current) return;
+        gsap.to(cardRef.current, {
+            rotateX: 0,
+            rotateY: flipped ? 180 : 0,
+            duration: 0.8,
+            ease: 'elastic.out(1, 0.5)'
+        });
+        if (shineRef.current) gsap.to(shineRef.current, { opacity: 0 });
+    };
+
+    useEffect(() => {
+        if (cardRef.current) {
+            gsap.to(cardRef.current, {
+                rotateY: flipped ? 180 : 0,
+                duration: 0.8,
+                ease: "back.out(1.2)"
+            });
+        }
+    }, [flipped]);
+
     return (
-        <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade relative">
-            <Header title="Plan a Visit" showBack onBack={goBack} showProfile={false} />
-            <div className="p-6 space-y-8">
-                <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Select a Date</h2><div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">{dates.map((date, i) => (<button key={i} onClick={() => setSelectedDate(i)} className={`min-w-[64px] h-[80px] rounded-xl flex flex-col items-center justify-center border transition-all ${selectedDate === i ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}><span className="text-xs font-serif italic opacity-80">{date.w}</span><span className="text-xl font-bold font-sans">{date.d}</span></button>))}</div></div>
-                <div className="space-y-4"><h2 className="text-2xl font-serif text-[#1A1A1A]">Select Time</h2><div className="grid grid-cols-3 gap-3">{times.map((time, i) => (<button key={i} onClick={() => setSelectedTime(time)} className={`py-3 rounded-lg text-sm font-sans font-medium border transition-all ${selectedTime === time ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#1A1A1A] border-transparent shadow-sm'}`}>{time}</button>))}</div></div>
-                
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-serif text-[#1A1A1A]">Reason for visit</h2>
-                    <div className="bg-white p-4 rounded-xl shadow-sm space-y-3">
-                        {reasons.map((r) => (
-                             <div 
-                                key={r.id}
-                                onClick={() => setSelectedReason(r.id)}
-                                className={`flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer ${selectedReason === r.id ? 'bg-[#1A1A1A] text-white' : 'bg-[#F9F8F6] text-[#1A1A1A] hover:bg-[#E8E2D9]'}`}
-                             >
-                                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${selectedReason === r.id ? 'border-white' : 'border-[#1A1A1A]'}`}>
-                                    {selectedReason === r.id && <div className="w-2 h-2 rounded-full bg-white" />}
-                                </div>
-                                <span className={`text-sm ${selectedReason === r.id ? 'text-white' : 'text-[#1A1A1A]'}`}>{r.label}</span>
+        <div className="flex flex-col items-center gap-8 animate-luxury-fade">
+            {/* 3D Container - Scaled Down by 40% */}
+            <div 
+                className="w-[180px] h-[270px] cursor-pointer perspective-container"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                onTouchMove={handleMouseMove}
+                onTouchEnd={handleMouseLeave}
+                onClick={() => setFlipped(!flipped)}
+                style={{ perspective: '1200px' }}
+            >
+                {/* The Card */}
+                <div 
+                    ref={cardRef} 
+                    className={`w-full h-full relative transition-all will-change-transform rounded-2xl shadow-2xl ${colors[color].bg}`}
+                    style={{ transformStyle: 'preserve-3d' }}
+                >
+                    {/* --- FRONT FACE --- */}
+                    <div className="absolute inset-0 backface-hidden flex flex-col items-center justify-between py-6 px-4 overflow-hidden rounded-2xl" style={{ backfaceVisibility: 'hidden' }}>
+                        
+                        {/* Materials: Texture + Dashed Stitching */}
+                        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/leather.png')]" />
+                        <div className="absolute inset-2 border border-dashed border-white/20 rounded-xl pointer-events-none" />
+
+                        {/* Sheen Layer */}
+                        <div ref={shineRef} className="absolute inset-[-50%] w-[200%] h-[200%] bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 pointer-events-none mix-blend-soft-light" />
+
+                        {/* Content */}
+                        <div className="text-center space-y-1 relative z-10">
+                            <div className="text-[8px] font-bold tracking-[0.2em] uppercase text-white opacity-90">Andrea Sparks</div>
+                            <div className="text-[8px] font-serif italic text-white opacity-70">N° 02</div>
+                        </div>
+
+                        {/* Metallic Foil Logo */}
+                        <div className="relative w-24 h-24">
+                             <div className="w-full h-full relative" style={{ 
+                                 maskImage: `url(${LORO_SYMBOL_PNG})`, 
+                                 WebkitMaskImage: `url(${LORO_SYMBOL_PNG})`,
+                                 maskSize: 'contain',
+                                 WebkitMaskSize: 'contain',
+                                 maskRepeat: 'no-repeat',
+                                 WebkitMaskRepeat: 'no-repeat',
+                                 maskPosition: 'center',
+                                 WebkitMaskPosition: 'center'
+                             }}>
+                                 {/* The moving gold gradient */}
+                                 <div ref={foilRef} className="absolute inset-[-50%] w-[200%] h-[200%] bg-gradient-to-tr from-[#C5A572] via-[#FBF5E9] to-[#8C7043]" />
                              </div>
-                        ))}
+                        </div>
+
+                        <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center relative z-10 ${colors[color].text}`}>
+                            <ArrowRight className="w-3 h-3 text-white" />
+                        </div>
+                    </div>
+
+                    {/* --- BACK FACE --- */}
+                    <div className="absolute inset-0 backface-hidden flex flex-col items-center justify-center p-4 rounded-2xl overflow-hidden" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                         {/* Materials */}
+                         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/leather.png')]" />
+                         <div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" />
+
+                         {/* Metallic Foil QR Code */}
+                         <div className="relative w-28 h-28 mb-4 bg-white p-3 rounded-lg shadow-inner">
+                            {/* We use a real QR SVG but styled as foil */}
+                            <QrCode className="w-full h-full text-[#1A1A1A]" strokeWidth={1} />
+                         </div>
+
+                         <div className={`text-[8px] font-bold uppercase tracking-[0.2em] ${colors[color].text} opacity-60`}>Scan at entrance</div>
                     </div>
                 </div>
             </div>
-            <div className="p-6 bg-[#F4F0EA] border-t border-black/5 pb-32">
-                <button 
-                    disabled={selectedDate === null || selectedTime === null || selectedReason === null} 
-                    onClick={() => setSubmitted(true)} 
-                    className="w-full bg-[#A64B3E] text-white py-4 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    Request Confirmation
-                </button>
+
+            {/* Customization Menu */}
+            <div className="flex gap-4 p-4 bg-[#1A1A1A]/80 backdrop-blur-md rounded-full border border-white/10 shadow-xl">
+                 <button onClick={(e) => { e.stopPropagation(); setColor('burgundy'); }} className={`w-6 h-6 rounded-full bg-[#9D5248] border-2 ${color === 'burgundy' ? 'border-white scale-110' : 'border-transparent opacity-50'} transition-all`} />
+                 <button onClick={(e) => { e.stopPropagation(); setColor('cream'); }} className={`w-6 h-6 rounded-full bg-[#F0EBE0] border-2 ${color === 'cream' ? 'border-white scale-110' : 'border-transparent opacity-50'} transition-all`} />
+                 <button onClick={(e) => { e.stopPropagation(); setColor('black'); }} className={`w-6 h-6 rounded-full bg-[#151515] border-2 ${color === 'black' ? 'border-white scale-110' : 'border-transparent opacity-50'} transition-all`} />
+                 <button onClick={(e) => { e.stopPropagation(); setColor('purple'); }} className={`w-6 h-6 rounded-full bg-[#3E2738] border-2 ${color === 'purple' ? 'border-white scale-110' : 'border-transparent opacity-50'} transition-all`} />
+            </div>
+        </div>
+    );
+};
+
+export const StoreKeyScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
+    return (
+        <div className="bg-[#000000] min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+             {/* Background Ambience */}
+             <div className="absolute inset-0 bg-gradient-to-b from-[#1A1A1A] to-black opacity-80" />
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#B08D57] opacity-10 blur-[120px] rounded-full pointer-events-none" />
+
+             <button onClick={goBack} className="absolute top-6 right-6 p-2 text-white/50 z-50 hover:text-white transition-colors"><X className="w-6 h-6" /></button>
+             
+             <div className="relative z-10 w-full max-w-md flex flex-col items-center">
+                 <div className="mb-10 text-center space-y-2">
+                     <h2 className="text-sm font-sans font-normal text-white">Access Key</h2>
+                     <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-sans">Tap card to flip</p>
+                 </div>
+                 
+                 <StoreAccessCard />
+             </div>
+        </div>
+    );
+};
+
+export const EventDetailScreen: React.FC<{ state: State; goBack: any; toggleChat: any; navigate: any }> = ({ state, goBack, toggleChat, navigate }) => {
+    const event = state.events.find(e => e.id === state.selectedEventId) || state.events[0];
+
+    return (
+        <div className="bg-[#1A1A1A] min-h-screen pb-28 text-white animate-luxury-fade">
+             <div className="relative h-[50vh] w-full">
+                <img src={event?.image} className="w-full h-full object-cover opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-[#1A1A1A]" />
+                <button onClick={goBack} className="absolute top-6 left-6 p-2 bg-black/20 backdrop-blur-md rounded-full border border-white/10"><ChevronLeft className="w-6 h-6 text-white" strokeWidth={1} /></button>
+            </div>
+            <div className="px-6 relative -mt-20 space-y-8">
+                 <div className="space-y-2">
+                     <span className="px-3 py-1 bg-[#B08D57] text-black text-[9px] font-bold uppercase tracking-widest rounded-sm">{event?.date}</span>
+                     <h1 className="text-3xl font-serif italic">{event?.title}</h1>
+                 </div>
+                 
+                 <p className="text-sm font-light leading-relaxed text-white/80 font-serif">{event?.description}</p>
+                 
+                 {event?.privileges && event.privileges.length > 0 && (
+                     <div className="space-y-4 pt-4 border-t border-white/10">
+                         <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/40">Your Privileges</h3>
+                         <ul className="space-y-3">
+                             {event.privileges.map((priv, i) => (
+                                 <li key={i} className="flex gap-3 items-start text-xs font-light text-white/80">
+                                     <Sparkles className="w-4 h-4 text-[#B08D57] shrink-0" strokeWidth={1} />
+                                     {priv}
+                                 </li>
+                             ))}
+                         </ul>
+                     </div>
+                 )}
+
+                 <div className="pt-6">
+                     <button onClick={toggleChat} className="w-full bg-white text-black py-4 rounded-full text-xs font-bold tracking-widest uppercase">Concierge Request</button>
+                 </div>
             </div>
         </div>
     );
 };
 
 export const PersonalPreferencesScreen: React.FC<{ state: State; goBack: any; navigate: any }> = ({ state, goBack, navigate }) => {
-  return (
-    <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade relative">
-       <div className="flex items-center justify-between px-6 py-4 pt-safe relative z-10"><button onClick={() => navigate('account')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform"><ChevronLeft className="w-5 h-5 text-[#1A1A1A]" strokeWidth={1.5} /></button><div className="text-lg font-bold text-[#1A1A1A] font-sans">Personal preferences</div><div className="w-10" /></div>
-       <div className="flex-1 overflow-y-auto p-6 space-y-8 pb-32">
-          <div className="space-y-3"><h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Size</h3><div className="bg-[#F9F8F6] rounded-xl overflow-hidden"><div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 border-b border-[#1A1A1A]/5 cursor-pointer active:bg-[#E8E2D9] transition-colors"><span className="text-sm text-[#1A1A1A]">My Measurements</span><ChevronRight className="w-4 h-4 text-[#A64B3E]" /></div><div onClick={() => navigate('my-size')} className="flex items-center justify-between p-5 cursor-pointer active:bg-[#E8E2D9] transition-colors"><span className="text-sm text-[#1A1A1A]">My size</span><ChevronRight className="w-4 h-4 text-[#A64B3E]" /></div></div></div>
-          <div className="space-y-3"><h3 className="text-sm font-bold text-[#1A1A1A] ml-1">Preferences</h3><div className="bg-[#F9F8F6] rounded-xl overflow-hidden"><PreferenceRow label="Color preference" value="Blue, Red, Grey" /><PreferenceRow label="Destination" value="Regular holiday destination" /><PreferenceRow label="Food & Beverage" value="Coffee & tea, soft bevarages..." /><PreferenceRow label="My hobbies & interest" value="Cars, Fitness, Travels..." border={false} /></div></div>
-       </div>
-       <div className="p-6 pb-32 space-y-6 bg-[#F4F0EA]"><p className="text-[10px] text-[#1A1A1A]/50 text-center leading-relaxed font-serif">This app does not store any private data.<br/>Read the the <span className="underline cursor-pointer">Terms & Conditions.</span></p><button onClick={() => navigate('account')} className="w-full py-4 bg-[#A64B3E] text-white rounded-full text-sm font-sans font-medium shadow-lg active:scale-[0.98] transition-transform">Save</button></div>
-    </div>
-  );
+    return (
+        <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade">
+            <Header title="Preferences" showBack onBack={goBack} />
+            <div className="p-6 space-y-8">
+                <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-[#1A1A1A] font-sans">Measurements</h3>
+                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                        <PreferenceRow label="My Sizes" value="IT 50" onClick={() => navigate('my-size')} />
+                        <PreferenceRow label="Tailoring Notes" value="2 Active" border={false} />
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-[#1A1A1A] font-sans">Style Profile</h3>
+                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                        <PreferenceRow label="Color Palette" value="Earthy Tones" />
+                        <PreferenceRow label="Fabric Preferences" value="Vicuña, Cashmere" />
+                        <PreferenceRow label="Fit Preference" value="Regular" border={false} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export const MySizeScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
-  return (
-    <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade pb-32">
-      <Header title="My Sizes" showBack onBack={() => goBack()} showProfile={false} />
-      <div className="p-6 space-y-4">
-         <div className="bg-white rounded-xl p-6 shadow-sm space-y-6">
-             <div className="grid grid-cols-2 gap-4 border-b border-black/5 pb-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Jacket</div><div className="text-xl font-serif">IT 50</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Trousers</div><div className="text-xl font-serif">IT 48</div></div></div>
-             <div className="grid grid-cols-2 gap-4 border-b border-black/5 pb-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Shoes</div><div className="text-xl font-serif">EU 43</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Shirt</div><div className="text-xl font-serif">40</div></div></div>
-             <div className="grid grid-cols-2 gap-4"><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Hat</div><div className="text-xl font-serif">M</div></div><div><div className="text-[10px] uppercase tracking-widest text-[#1A1A1A]/50">Gloves</div><div className="text-xl font-serif">9</div></div></div>
-         </div>
-         <p className="text-[10px] text-center text-[#1A1A1A]/50">Based on your last scan on Oct 24, 2024</p>
-      
-         {/* Family Sizes Module */}
-         <div className="pt-6 space-y-3">
-             <h3 className="text-lg font-serif text-[#1A1A1A]">Family Sizes</h3>
-             <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-                 <div className="flex items-center justify-between p-5 border-b border-[#1A1A1A]/5 cursor-pointer active:bg-[#F9F8F6] transition-colors">
-                     <div>
-                        <div className="text-sm font-sans text-[#1A1A1A]">Riccardo</div>
-                        <div className="text-[10px] text-[#1A1A1A]/60 uppercase tracking-wider font-bold mt-0.5">Husband</div>
-                     </div>
-                     <ChevronRight className="w-4 h-4 text-[#A64B3E]" strokeWidth={1.5} />
-                 </div>
-                 <div className="flex items-center justify-between p-5 cursor-pointer active:bg-[#F9F8F6] transition-colors">
-                     <div>
-                        <div className="text-sm font-sans text-[#1A1A1A]">Lucia</div>
-                        <div className="text-[10px] text-[#1A1A1A]/60 uppercase tracking-wider font-bold mt-0.5">Daughter</div>
-                     </div>
-                     <ChevronRight className="w-4 h-4 text-[#A64B3E]" strokeWidth={1.5} />
-                 </div>
-             </div>
-             <button className="w-full py-4 border border-[#1A1A1A]/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A] active:scale-[0.98] transition-all bg-white shadow-sm flex items-center justify-center gap-2 hover:bg-[#F9F8F6]">
-                <Plus className="w-3 h-3" /> Add Member
-             </button>
-         </div>
-      </div>
-    </div>
-  );
+    const sizes = [
+        { category: "Outerwear", size: "IT 50" },
+        { category: "Knitwear", size: "IT 50" },
+        { category: "Shirts", size: "39" },
+        { category: "Trousers", size: "IT 48" },
+        { category: "Shoes", size: "42.5" }
+    ];
+
+    return (
+        <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade">
+            <Header title="My Sizes" showBack onBack={goBack} />
+            <div className="p-6 space-y-6">
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#1A1A1A]/5 flex items-center gap-6">
+                    <div className="w-16 h-16 bg-[#F4F0EA] rounded-full flex items-center justify-center">
+                        <Ruler className="w-6 h-6 text-[#A64B3E]" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-serif italic text-[#1A1A1A]">Digital Measurement</h3>
+                        <p className="text-[10px] text-[#1A1A1A]/60 font-sans mt-1">Last updated: Oct 12, 2024</p>
+                    </div>
+                    <button className="ml-auto px-4 py-2 border border-[#1A1A1A]/10 rounded-full text-[10px] uppercase font-bold tracking-wider">Update</button>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    {sizes.map((item, i) => (
+                        <div key={i} className={`flex items-center justify-between p-5 ${i !== sizes.length - 1 ? 'border-b border-[#1A1A1A]/5' : ''}`}>
+                            <span className="text-sm text-[#1A1A1A] font-sans">{item.category}</span>
+                            <span className="text-sm font-serif italic text-[#1A1A1A]">{item.size}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 };
 
-// Constant for the QR code SVG path
-const QR_PATH = "M94 115H88V109H94V115ZM115 104H109V109H115V115H98V103H109V98H115V104ZM39 114H1V76H39V114ZM71 44H76V49H81V70H76V82H72V103H83V114H77V109H72V114H66V109H50V103H66V93H60V98H54V92H60V81H54V76H60V71H66V82H71V71H66V65H55V70H49V65H44V59H38V53H33V59H27V53H22V48H49V64H55V43H66V33H71V44ZM6 109H34V81H6V109ZM31 106H9V84H31V106ZM94 104H88V98H94V104ZM50 103H44V97H50V103ZM93 70H98V87H88V93H82V70H87V65H93V70ZM115 92H109V82H104V70H109V65H115V92ZM88 81H92V71H88V81ZM17 71H0V66H6V60H12V55H6V49H12V44H17V71ZM37 71H31V65H37V71ZM61 60H66V48H61V60ZM99 55H93V60H87V54H93V43H99V55ZM115 60H104V49H110V44H115V60ZM51 39H45V33H51V39ZM39 38H1V0H39V38ZM115 38H77V0H115V38ZM6 33H34V5H6V33ZM82 33H110V5H82V33ZM31 30H9V8H31V30ZM107 30H85V8H107V30ZM71 17H66V22H71V28H49V22H44V16H50V22H61V16H66V11H60V5H55V11H49V5H44V0H71V17Z";
-
-export const StoreKeyScreen: React.FC<{ goBack: any }> = ({ goBack }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const CARD_COLORS = [{ id: 'classic', bg: '#9D5248', accent: '#633832', name: 'Classic' }, { id: 'light', bg: '#EFEAE6', accent: '#9D5248', name: 'Light' }, { id: 'dark', bg: '#000000', accent: '#4A4646', name: 'Dark' }, { id: 'royal', bg: '#2F134D', accent: '#17012D', name: 'Royal' }];
-  const [cardStyle, setCardStyle] = useState(CARD_COLORS[0]);
-  const cardContainerRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const shineRef = useRef<HTMLDivElement>(null);
-  const specularRef = useRef<HTMLDivElement>(null);
-  const backShineRef = useRef<HTMLDivElement>(null);
-  const backSpecularRef = useRef<HTMLDivElement>(null);
-  const logoGradientRef = useRef<HTMLDivElement>(null);
-  const qrGradientRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!cardRef.current || !cardContainerRef.current) return;
-    // @ts-ignore
-    const { clientX, clientY } = 'touches' in e ? e.touches[0] : e;
-    const rect = cardContainerRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const rotateX = (centerY - clientY) / 20;
-    const rotateY = (clientX - centerX) / 20;
-    gsap.to(cardRef.current, { rotateX: rotateX, rotateY: isFlipped ? 180 - rotateY : rotateY, duration: 0.2, ease: 'power1.out', transformPerspective: 1000 });
+export const PlanVisitScreen: React.FC<{ goBack: any; navigate: any }> = ({ goBack, navigate }) => {
+    const store = INITIAL_STATE.user.homeStore; // Use home store data
     
-    // Calculations for gradient movement
-    const relX = (clientX - rect.left) / rect.width;
-    const relY = (clientY - rect.top) / rect.height;
-
-    // Front Reflections
-    if (shineRef.current && specularRef.current) {
-      gsap.to(shineRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, opacity: 0.3, duration: 0.4 });
-      gsap.to(specularRef.current, { x: (relX - 0.5) * -120, y: (relY - 0.5) * -120, opacity: 0.4, duration: 0.2 });
-    }
-
-    // Back Reflections
-    if (backShineRef.current && backSpecularRef.current) {
-      gsap.to(backShineRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, opacity: 0.3, duration: 0.4 });
-      gsap.to(backSpecularRef.current, { x: (relX - 0.5) * -120, y: (relY - 0.5) * -120, opacity: 0.4, duration: 0.2 });
-    }
-
-    // Metallic Foil Mask Movement (Parallax Effect)
-    if (logoGradientRef.current) {
-        gsap.to(logoGradientRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, duration: 0.1 });
-    }
-    if (qrGradientRef.current) {
-        gsap.to(qrGradientRef.current, { x: (relX - 0.5) * 60, y: (relY - 0.5) * 60, duration: 0.1 });
-    }
-  };
-
-  const handleMouseLeave = () => { 
-    if (!cardRef.current) return; 
-    gsap.to(cardRef.current, { rotateX: 0, rotateY: isFlipped ? 180 : 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }); 
-    
-    // Reset Front
-    if (shineRef.current) gsap.to(shineRef.current, { opacity: 0, duration: 0.5 }); 
-    if (specularRef.current) gsap.to(specularRef.current, { opacity: 0, duration: 0.5 }); 
-    
-    // Reset Back
-    if (backShineRef.current) gsap.to(backShineRef.current, { opacity: 0, duration: 0.5 });
-    if (backSpecularRef.current) gsap.to(backSpecularRef.current, { opacity: 0, duration: 0.5 });
-  };
-  
-  useEffect(() => { if (!cardRef.current) return; gsap.to(cardRef.current, { rotateY: isFlipped ? 180 : 0, duration: 0.8, ease: 'back.out(1.2)' }); }, [isFlipped]);
-
-  // Metallic gradient style based on card accent
-  const metallicGradientStyle = {
-      background: `linear-gradient(135deg, ${cardStyle.accent} 20%, #ffffff 50%, ${cardStyle.accent} 80%)`,
-      backgroundSize: '200% 200%'
-  };
-
-  return (
-    <div className="fixed inset-0 w-full h-[100dvh] flex flex-col store-access-bg text-white animate-luxury-fade overflow-hidden z-50 mobile-stage-fixed bg-black">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 pointer-events-none" />
-      <div className="h-14 shrink-0 px-8 pt-safe flex justify-between items-center relative z-20"><div /><div className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-80 font-sans">Access Portal</div><button onClick={() => setIsEditing(!isEditing)} className={`p-2.5 backdrop-blur-md rounded-full active:scale-90 transition-all ${isEditing ? 'bg-white text-black' : 'bg-white/10 text-white'}`}><Edit2 className="w-3.5 h-3.5" strokeWidth={1.5} /></button></div>
-      <div className="flex-1 min-h-0 flex flex-col items-center justify-center relative z-10 w-full px-8 py-2">
-        {/* Updated Aspect Ratio: 1 / 1.586 (Credit Card Standard) and Max Width 300px */}
-        <div ref={cardContainerRef} className="relative w-full aspect-[1/1.586] max-w-[300px] cursor-pointer touch-none" style={{ perspective: '1200px' }} onMouseMove={handleMouseMove} onTouchMove={handleMouseMove} onMouseLeave={handleMouseLeave} onTouchEnd={handleMouseLeave} onClick={() => !isEditing && setIsFlipped(!isFlipped)}>
-          <div ref={cardRef} className="w-full h-full relative" style={{ transformStyle: 'preserve-3d', transition: 'none' }}>
+    return (
+        <div className="bg-[#F4F0EA] min-h-screen flex flex-col font-sans animate-luxury-fade pb-10">
+            <div className="relative h-[45vh] w-full">
+                <img src={store.image} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/20" />
+                <button onClick={goBack} className="absolute top-6 left-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-90 transition-transform"><ChevronLeft className="w-5 h-5" strokeWidth={1.5} /></button>
+            </div>
             
-            {/* FRONT FACE */}
-            <div className="absolute inset-0 w-full h-full rounded-2xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col items-center justify-between overflow-hidden transition-colors duration-500" style={{ backgroundColor: cardStyle.bg, backfaceVisibility: 'hidden' }}>
-              <div className="absolute inset-0 opacity-[0.6] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/leather.png')] bg-[length:300px_300px]" />
-              <div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" />
-              <div ref={shineRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-soft-light" style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.8) 50%, transparent 60%)', filter: 'blur(20px)' }} />
-              <div ref={specularRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-overlay" style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, transparent 40%)' }} />
-              
-              <div className="relative z-10 text-center space-y-1 mt-2">
-                  <div className="text-[10px] uppercase font-bold opacity-90 font-sans text-shadow-sm tracking-normal">Andrea Sparks</div>
-                  <div className="text-[9px] opacity-80 font-light font-serif italic tracking-normal">Client since 2005</div>
-              </div>
-              
-              <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
-                  {/* Masked Metallic Logo */}
-                  <div className="w-28 h-28 relative z-10">
-                      <div className="w-full h-full" style={{ 
-                          maskImage: `url(${LORO_SYMBOL_PNG})`, 
-                          maskSize: 'contain', 
-                          maskRepeat: 'no-repeat', 
-                          maskPosition: 'center', 
-                          WebkitMaskImage: `url(${LORO_SYMBOL_PNG})`, 
-                          WebkitMaskSize: 'contain', 
-                          WebkitMaskRepeat: 'no-repeat', 
-                          WebkitMaskPosition: 'center' 
-                      }}>
-                           <div ref={logoGradientRef} className="absolute inset-[-50%]" style={metallicGradientStyle} />
-                      </div>
-                  </div>
-              </div>
-              
-              <div className="relative z-10 flex items-center justify-center w-8 h-8 bg-black/20 backdrop-blur-md rounded-full border border-white/10 shadow-inner">
-                  <ShieldCheck className="w-3.5 h-3.5 opacity-60 text-white" strokeWidth={1.5} />
-              </div>
-            </div>
-
-            {/* BACK FACE */}
-            <div className="absolute inset-0 w-full h-full rounded-2xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col items-center justify-center overflow-hidden" style={{ backgroundColor: cardStyle.bg, backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-               <div className="absolute inset-0 opacity-[0.6] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/leather.png')] bg-[length:300px_300px]" />
-               <div className="absolute inset-3 border border-dashed border-white/20 rounded-xl pointer-events-none" />
-               {/* 3D Reflections for Back Face */}
-               <div ref={backShineRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-soft-light" style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.8) 50%, transparent 60%)', filter: 'blur(20px)' }} />
-               <div ref={backSpecularRef} className="absolute inset-[-50%] pointer-events-none opacity-0 z-20 mix-blend-overlay" style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, transparent 40%)' }} />
-
-               {/* QR Code Container - Scaled to 0.5 as requested */}
-               <div className="w-full aspect-square flex items-center justify-center relative scale-[0.5] p-2">
-                   <div className="w-full h-full relative">
-                       {/* Masked Metallic QR Code */}
-                        <div className="w-full h-full" style={{ 
-                          maskImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 115 115'%3E%3Cpath d='${QR_PATH}' fill='black'/%3E%3C/svg%3E")`,
-                          maskSize: 'contain', 
-                          maskRepeat: 'no-repeat', 
-                          maskPosition: 'center', 
-                          WebkitMaskImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 115 115'%3E%3Cpath d='${QR_PATH}' fill='black'/%3E%3C/svg%3E")`,
-                          WebkitMaskSize: 'contain', 
-                          WebkitMaskRepeat: 'no-repeat', 
-                          WebkitMaskPosition: 'center' 
-                        }}>
-                           <div ref={qrGradientRef} className="absolute inset-[-50%]" style={metallicGradientStyle} />
+            <div className="flex-1 bg-[#F4F0EA] -mt-10 rounded-t-[32px] relative z-10 px-6 pt-8 space-y-8">
+                <div>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B08D57]">Home Store</span>
+                            <h1 className="text-3xl font-serif italic text-[#1A1A1A] mt-1">{store.name}</h1>
                         </div>
-                   </div>
-               </div>
+                        <div className="w-12 h-12 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white shadow-lg">
+                            <MapPin className="w-5 h-5" strokeWidth={1.5} />
+                        </div>
+                    </div>
+                    <p className="text-sm text-[#1A1A1A]/60 font-serif mt-2">{store.location}</p>
+                </div>
+
+                <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-[#1A1A1A] uppercase tracking-wider">Services</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                        {['Private Suite', 'Tailoring', 'Alterations', 'Valet Parking'].map((s) => (
+                            <div key={s} className="bg-white p-4 rounded-xl shadow-sm text-center text-xs font-serif italic text-[#1A1A1A]">{s}</div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                     <h3 className="text-sm font-bold text-[#1A1A1A] uppercase tracking-wider">Opening Hours</h3>
+                     <div className="bg-white p-6 rounded-2xl shadow-sm space-y-2">
+                        <div className="flex justify-between text-xs text-[#1A1A1A]"><span>Mon - Fri</span><span>10:00 - 20:00</span></div>
+                        <div className="flex justify-between text-xs text-[#1A1A1A]"><span>Sat</span><span>10:00 - 20:00</span></div>
+                        <div className="flex justify-between text-xs text-[#1A1A1A]/50"><span>Sun</span><span>11:00 - 18:00</span></div>
+                     </div>
+                </div>
+
+                <button className="w-full py-5 bg-[#A64B3E] text-white rounded-full font-bold uppercase tracking-[0.3em] text-[10px] shadow-xl active:scale-[0.98] transition-all">
+                    Book Appointment
+                </button>
             </div>
-          </div>
         </div>
-      </div>
-      <div className="shrink-0 px-8 pb-8 pt-4 w-full relative z-20 flex flex-col items-center gap-6">
-        <div className="w-full min-h-[100px] flex items-end justify-center">
-            {isEditing ? (<div className="w-full animate-luxury-fade space-y-4"><div className="text-center text-[9px] font-bold uppercase opacity-50 font-sans tracking-normal">Personalize Card</div><div className="flex justify-center gap-4">{CARD_COLORS.map((c) => (<button key={c.id} onClick={() => setCardStyle(c)} className={`w-10 h-10 rounded-full border-2 transition-all shadow-lg ${cardStyle.id === c.id ? 'border-white scale-110' : 'border-white/20 scale-100 hover:scale-105'}`} style={{ backgroundColor: c.bg }} />))}</div></div>) : (<div className="w-full max-w-[280px] mx-auto flex flex-col items-center space-y-4 animate-luxury-fade"><button className="relative w-full h-10 flex items-center justify-center transition-transform active:scale-95 hover:brightness-110"><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Add_to_Apple_Wallet_badge.svg" alt="Add to Apple Wallet" className="h-full object-contain" /></button><div className="w-full space-y-2"><button className="w-full py-3.5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full text-[10px] font-bold uppercase shadow-lg active:scale-[0.98] transition-all font-sans hover:bg-white/20 tracking-normal">Notify arrival</button></div></div>)}
-        </div>
-        <button onClick={goBack} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white active:scale-90 transition-transform bg-black/20 backdrop-blur-md"><X className="w-5 h-5" /></button>
-      </div>
-    </div>
-  );
+    );
 };

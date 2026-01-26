@@ -1,5 +1,5 @@
 
-export type ScreenType = 'welcome' | 'login' | 'home' | 'wardrobe' | 'wardrobe-detail' | 'create-wardrobe' | 'wardrobe-listing' | 'events' | 'event-detail' | 'product-detail' | 'drops' | 'account' | 'mto' | 'store-key' | 'ca-detail' | 'family-sizes' | 'exclusive-access' | 'add-item-selection' | 'add-item-method' | 'scan-item' | 'personal-preferences' | 'my-size' | 'plan-visit';
+export type ScreenType = 'welcome' | 'login' | 'home' | 'wardrobe' | 'wardrobe-detail' | 'create-wardrobe' | 'wardrobe-listing' | 'events' | 'event-detail' | 'product-detail' | 'drops' | 'account' | 'mto' | 'mto-detail' | 'store-key' | 'ca-detail' | 'family-sizes' | 'exclusive-access' | 'add-item-selection' | 'add-item-method' | 'scan-item' | 'personal-preferences' | 'my-size' | 'plan-visit' | 'order-history' | 'collection-landing' | 'capsule-carousel' | 'capsule-confirm';
 
 export type EventStatus = 'none' | 'confirmed' | 'declined';
 export type MTOStatus = 'confirmed' | 'creation' | 'finishing' | 'quality' | 'ready' | 'delivered';
@@ -21,6 +21,15 @@ export interface Wardrobe {
   items: WardrobeItem[];
 }
 
+export interface Store {
+    id: string;
+    name: string;
+    location: string;
+    manager: string;
+    image: string;
+    isHome?: boolean;
+}
+
 export interface State {
   user: {
     name: string;
@@ -28,12 +37,15 @@ export interface State {
     size: string;
     measurements: string;
     avatar: string;
+    homeStore: Store;
+    visitedStores: Store[];
   };
   ca: {
     name: string;
     avatar: string;
-    status: 'Online' | 'Busy' | 'Away';
-    backAt?: string;
+    status: 'Available' | 'On Leave';
+    replacementName?: string;
+    replacementAvatar?: string;
   };
   events: Array<{
     id: string;
@@ -71,4 +83,5 @@ export interface State {
   selectedWardrobeId: string | null;
   selectedEventId: string | null;
   selectedProductId: string | null;
+  selectedCapsuleItemId?: string;
 }
